@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="libs/htmlparser.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/Zach/Desktop/cs_and_programming/eclipse/External Libraries/htmlparser1_6_20060610/htmlparser1_6/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/joda-time-2.2.jar" sourcepath="/Users/Zach/Desktop/cs_and_programming/eclipse/External Libraries/joda-time-2.2/joda-time-2.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/Zach/Desktop/cs_and_programming/eclipse/External Libraries/joda-time-2.2/joda-time-2.2-javadoc.jar"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/joda-time-2.2-sources.jar"/>
+	<classpathentry kind="lib" path="libs/android-query-full.0.25.6-beta.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
