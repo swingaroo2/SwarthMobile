@@ -45,7 +45,6 @@ public class Events extends Activity {
 	private final int PAGE = 5;
 	private final int DESCRIPTION = 6;
 	private final int CONTACT = 7;
-	private final int CONTACT2 = 7;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
