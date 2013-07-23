@@ -7,16 +7,20 @@ import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.NodeVisitor;
-import org.joda.time.DateTime;
 
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,15 +57,59 @@ public class Events extends Activity {
 
 		getHTML();
 		//Log.i(tag, "HTML obtained");
+		
+		/* Tabs */
+		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
+		tabHost.setup();
+		
+		final TabWidget tabWidget = tabHost.getTabWidget();
+		final FrameLayout tabContent = tabHost.getTabContentView();
+		
+		
+		/* Get the original tab textviews and remove them from the viewgroup. */
+		TextView[] originalTextViews = new TextView[tabWidget.getTabCount()];
+		for (int index = 0; index < tabWidget.getTabCount(); index++) {
+			originalTextViews[index] = (TextView) tabWidget.getChildTabViewAt(index);
+		}
+		//Log.i(tag, "originalTextViews: "+Arrays.toString(originalTextViews));
+		tabWidget.removeAllViews();
+		
+		/* Ensure that all tab content children are not visible at startup. */
+		for (int index = 0; index < tabContent.getChildCount(); index++) {
+			tabContent.getChildAt(index).setVisibility(View.GONE);
+		}
+		Log.i(tag, "tabContent: "+tabContent.getChildCount());
+		/* Create the tabspec based on the textview children in the xml file.
+		   Or create simple tabspec instances in any other way... */
+		for (int index = 0; index < originalTextViews.length; index++) {
+			final TextView tabWidgetTextView = originalTextViews[index];
+			final View tabContentView = tabContent.getChildAt(index);
+			Log.i(tag, "tabContentView: "+tabContentView);
+			TabSpec tabSpec = tabHost.newTabSpec((String) tabWidgetTextView.getTag());
+			tabSpec.setContent(new TabContentFactory() {
+				@Override
+				public View createTabContent(String tag) {
+					//Log.i("Events", "tabContentView: "+tabContentView+"\nTags: "+tag);
+					return tabContentView;
+				}
+			});
+			if (tabWidgetTextView.getBackground() == null) {
+				tabSpec.setIndicator(tabWidgetTextView.getText());
+			} else {
+				tabSpec.setIndicator(tabWidgetTextView.getText(), tabWidgetTextView.getBackground());
+			}
+			tabHost.addTab(tabSpec);
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+		/* Inflate the menu; this adds items to the action bar if it is present. */
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
+	
+	
 	/*
 	 * Checks if a network connection is present
 	 * NOTE: Uses ACCESS_NETWORK_STATE permission
@@ -88,6 +136,9 @@ public class Events extends Activity {
 		return status;
 	}
 
+	
+	/////////// Event retrieval backend  ///////////
+	
 	/*
 	 * Retrieves HTML from calendar.swarthmore.edu
 	 */
@@ -265,10 +316,12 @@ public class Events extends Activity {
 	}
 	
 	/*
+	 * getNestedHTML helper function
+	 * 
 	 * Contact information is passed in as a messy String that contains
 	 * up to three pieces of useful information: name, phone, and email.
 	 * 
-	 * Splitting in reverse order should produce a cleaner String with these three
+	 * Splitting in reverse order should produce a cleaner String
 	 * delimited by newlines. 
 	 * 
 	 */
