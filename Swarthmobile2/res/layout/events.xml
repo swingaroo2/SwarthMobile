@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white" >
+        android:background="@color/black" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,6 +33,7 @@
                     <TabWidget
                         android:id="@android:id/tabs"
                         android:layout_width="fill_parent"
+                        android:background="@color/white"
                         android:layout_height="wrap_content" >
 
                         <TextView
@@ -40,7 +41,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:tag="tab0"
-                            android:text="Day 1"
+                            android:background="@color/black"
+                            android:text="@string/day1"
                             android:textColor="@color/white" />
 
                         <TextView
@@ -48,7 +50,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:tag="tab1"
-                            android:text="Day 2"
+                            android:text="@string/day2"
                             android:textColor="@color/white" />
 
                         <TextView
@@ -56,7 +58,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:tag="tab2"
-                            android:text="Day 3"
+                            android:text="@string/day3"
                             android:textColor="@color/white" />
 
                         <TextView
@@ -64,33 +66,32 @@
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:tag="tab3"
-                            android:text="Day 4"
+                            android:text="@string/day4"
                             android:textColor="@color/white" />
-
                         
                         <TextView
                             android:id="@+id/day5"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:tag="tab4"
-                            android:textColor="@color/white"
-                            android:text="Day 5" />
+                            android:text="@string/day5" 
+                            android:textColor="@color/white" />
 
                         <TextView
                             android:id="@+id/day6"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:tag="tab5"
-                            android:textColor="@color/white"
-                            android:text="Day 6" />
+                            android:text="@string/day6"
+                            android:textColor="@color/white" />
 
                         <TextView
                             android:id="@+id/day7"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
                             android:tag="tab6"
-                            android:textColor="@color/white"
-                            android:text="Day 7" />
+                            android:text="@string/day7" 
+                            android:textColor="@color/white" />
                        
                     </TabWidget>
 
@@ -102,37 +103,37 @@
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:text="Hallo1" />
+                            android:text="@string/body1" />
 
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:text="Hallo2" />
+                            android:text="@string/body2" />
 
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:text="Hallo3" />
+                            android:text="@string/body3" />
 
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:text="Hallo4" />
+                            android:text="@string/body4" />
 
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:text="Hallo5" />
+                            android:text="@string/body5" />
 
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:text="Hallo6" />
+                            android:text="@string/body6" />
 
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:text="Hallo7" />
+                            android:text="@string/body7" />
                     </FrameLayout>
                 </LinearLayout>
             </TabHost>
