@@ -1,7 +1,5 @@
 package lockett_streiff.swarthmobile2;
 
-import java.util.Arrays;
-
 import org.htmlparser.Parser;
 import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
@@ -16,12 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TabHost;
-import android.widget.TabHost.TabContentFactory;
-import android.widget.TabHost.TabSpec;
-import android.widget.TabWidget;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
@@ -39,7 +32,8 @@ import com.androidquery.callback.AjaxStatus;
 public class Events extends Activity {
 
 	private final String tag = "Events";
-	
+	private ListView eventsPane;
+
 	/* Event constants */
 	private final int NAME = 0;
 	private final int DATE = 1;
@@ -49,58 +43,20 @@ public class Events extends Activity {
 	private final int PAGE = 5;
 	private final int DESCRIPTION = 6;
 	private final int CONTACT = 7;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.events);
 
+		/* Acquire variables from XML */
+		eventsPane = (ListView) this.findViewById(R.id.event_viewing_pane_lv); 
+		
+		/* Setup */
 		getHTML();
-		//Log.i(tag, "HTML obtained");
-		
-		/* Tabs */
-		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
-		tabHost.setup();
-		
-		final TabWidget tabWidget = tabHost.getTabWidget();
-		final FrameLayout tabContent = tabHost.getTabContentView();
-		
-		
-		/* Get the original tab textviews and remove them from the viewgroup. */
-		TextView[] originalTextViews = new TextView[tabWidget.getTabCount()];
-		for (int index = 0; index < tabWidget.getTabCount(); index++) {
-			originalTextViews[index] = (TextView) tabWidget.getChildTabViewAt(index);
-		}
-		//Log.i(tag, "originalTextViews: "+Arrays.toString(originalTextViews));
-		tabWidget.removeAllViews();
-		
-		/* Ensure that all tab content children are not visible at startup. */
-		for (int index = 0; index < tabContent.getChildCount(); index++) {
-			tabContent.getChildAt(index).setVisibility(View.GONE);
-		}
-		Log.i(tag, "tabContent: "+tabContent.getChildCount());
-		/* Create the tabspec based on the textview children in the xml file.
-		   Or create simple tabspec instances in any other way... */
-		for (int index = 0; index < originalTextViews.length; index++) {
-			final TextView tabWidgetTextView = originalTextViews[index];
-			final View tabContentView = tabContent.getChildAt(index);
-			Log.i(tag, "tabContentView: "+tabContentView);
-			TabSpec tabSpec = tabHost.newTabSpec((String) tabWidgetTextView.getTag());
-			tabSpec.setContent(new TabContentFactory() {
-				@Override
-				public View createTabContent(String tag) {
-					//Log.i("Events", "tabContentView: "+tabContentView+"\nTags: "+tag);
-					return tabContentView;
-				}
-			});
-			if (tabWidgetTextView.getBackground() == null) {
-				tabSpec.setIndicator(tabWidgetTextView.getText());
-			} else {
-				tabSpec.setIndicator(tabWidgetTextView.getText(), tabWidgetTextView.getBackground());
-			}
-			tabHost.addTab(tabSpec);
-		}
+
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,7 +64,11 @@ public class Events extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
+	/* onClick event listener for buttons */
+	public void showEvents(View v) {
+		Log.i(tag, "showEvents");
+	}
 	
 	/*
 	 * Checks if a network connection is present
@@ -136,18 +96,18 @@ public class Events extends Activity {
 		return status;
 	}
 
-	
+
 	/////////// Event retrieval backend  ///////////
-	
+
 	/*
 	 * Retrieves HTML from calendar.swarthmore.edu
 	 */
 	private String getHTML() {
 		//Log.i("Events - getHTML", "HTML parsing - 1st round");
-		
+
 		/* Only runs if network is online */
 		if (!isNetworkOnline()) {return "";}
-		
+
 		final AQuery aq = new AQuery(Events.this);
 		//final AQuery aq2 = new AQuery(Events.this);
 		//final TextView tv = (TextView) this.findViewById(R.id.tv);
@@ -157,13 +117,13 @@ public class Events extends Activity {
 			@Override
 			public void callback(String url, String html, AjaxStatus status) {
 				/* First round HTML parsing - All events */
-				
+
 				/* Debugging */
 				/*Log.i(tag, "URL: "+url);
 				Log.i(tag, "HTML: "+html);
 				tv.setMovementMethod(new ScrollingMovementMethod());
 				tv.setText(html);*/
-				
+
 				//Log.i(tag, "MSG: "+status.getMessage());
 
 				/* Second round HTML parsing - href tags */
@@ -184,32 +144,34 @@ public class Events extends Activity {
 	 */
 	private String[] getNestedHTML(String html) {
 		class PageInfo {
-			
+
 			/* Event fields */
 			public String[] eventArr;
-			
+
 			/* Initialize to null */
 			PageInfo() {eventArr = new String[8];}
 		}
-		
+
 		/* PageInfo enables us to circumvent scoping issues when scraping HTML */
 		final PageInfo event = new PageInfo();
-		
+
 		/* Start parsing HTML */
 		NodeVisitor visitor = new NodeVisitor() {
 			AQuery aq = new AQuery(Events.this);
 			public void visitTag(Tag tag) {
 				String name = tag.getTagName();
 				String url = "http://calendar.swarthmore.edu/calendar/";
-				
+
 				/* Get event date */
 				if ("TD".equals(name)) {
 					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("listheadtext")) {
 						event.eventArr[DATE] = tag.toPlainTextString();
 						//Log.i("Events", "Date: "+evDate);
+						
+						/* Set text of tabs to date */
 					}
 				}
-				
+
 				/* Get event name */
 				if ("A".equals(name)) {
 					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("listtext")) {
@@ -217,57 +179,57 @@ public class Events extends Activity {
 						//Log.i("Events", "Name: "+evName);
 					}
 				}
-				
+
 				/* Get event time, page, location, description, and contact information */
 				if ("A".equals(name)) {
 					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("url")) {
 						event.eventArr[TIME] = tag.toPlainTextString();
-						
+
 						/* Log.i("Events", "Time: "+event.time);
 						Log.i("Events", "------------------------------------------------"); */
-						
+
 						/* Navigate to link in href attribute and parse HTML for event description and location */
 						String eventPage = url + tag.getAttribute("href");
 						//Log.i("Events", "Navigating to url: "+eventPage);
-						
+
 						/* Get event page */
 						event.eventArr[PAGE] = eventPage;
-						
+
 						/* Not getting event description - parsing all the <p> tags would
 						be a computationally-expensive hassle. Just make a "more info" button */
-						
+
 						/* AQuery AJAX call to navigate into href link */
 						aq.ajax(eventPage, String.class, new AjaxCallback<String>() {
 
 							@Override
 							public void callback(String url, String html, AjaxStatus status) {
-								
+
 								/* Debugging */
 								/*TextView tv = (TextView) findViewById(R.id.tv);
 								tv.setText(html);
 								tv.setMovementMethod(new ScrollingMovementMethod());
 								Log.i("visitTag", "Internal HTML status: "+status.getMessage());*/								
-								
+
 								/* Get event location */
 								NodeVisitor visitor = new NodeVisitor() {
 									public void visitTag(Tag tag) {
 										String name = tag.getTagName();
 										//Log.i("Events", "Tag:"+name);
-										
+
 										/* Get location (note: can add a "More info" button to go to event page in lieu of description) */				
 										if ("A".equals(name)) {
 											if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("calendartext")) {
 												if (tag.toPlainTextString().contains("Swarthmore College")) {
 													event.eventArr[LOCATION] = tag.toPlainTextString().replace("*Swarthmore College - ", "");
 													//Log.i("Events", "Location: "+event.location);
-													
-													
+
+
 													/* How do I navigate scoping in order to retrieve the location?
 													Answer: PageInfo, it's actually useful for something after all! */												
 												}						
 											}
 										}
-										
+
 										/* Get event description*/
 										if (("META").equals(name)) {
 											if (tag.getAttribute("name") != null && tag.getAttribute("name").equals("description")) {
@@ -279,7 +241,7 @@ public class Events extends Activity {
 												}
 											}	
 										}
-										
+
 										/* Get event contact information */
 										if (("TD").equals(name)) {
 											if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("detailsview") ) {
@@ -304,17 +266,17 @@ public class Events extends Activity {
 				}
 			}
 		};
-		
+
 		/* Execute outer HTML parsing */
 		Parser parser = new Parser(new Lexer(html));
 		try {parser.visitAllNodesWith(visitor);}
 		catch (ParserException e) {e.printStackTrace();}
-		
+
 		/* Return the String[] in event (the PageInfo class instance). Aren't I clever? */
 		//Log.i("Events", "Event: "+Arrays.toString(event.eventArr));
 		return event.eventArr;
 	}
-	
+
 	/*
 	 * getNestedHTML helper function
 	 * 
@@ -330,22 +292,22 @@ public class Events extends Activity {
 		ci = ci.replace(": ", "");
 		String[] ciSplit = ci.split("Email|Name|Phone");
 		//Log.i("Events - parseContactInfo",Arrays.toString(ciSplit));
-		
+
 		for (String str: ciSplit) {
 			/* Emails have the @ symbol */
 			if (str.contains("@")) { myCi += (str.trim()+"\n"); }
-			
+
 			/* Phone numbers have the (610) extension */
 			else if (str.contains("(610)")) { myCi += (str.trim()+"\n"); }
-			
+
 			/* Otherwise, it's a name */
 			else { myCi += (str.trim()+"\n"); }
 		}
-		
+
 		myCi = myCi.substring(1, myCi.length()-1);
 		//Log.i("Events - parseContactInfo",myCi);
 		//Log.i("Events - parseContactInfo","-----------------------------------------------");
-		
+
 		return myCi;
 	}
 }

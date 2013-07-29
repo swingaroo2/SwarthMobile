@@ -5,16 +5,35 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main_menu">MainMenu</string>
-    
-    <!-- Tab label text  -->
-    <string name="day1">Day 1</string>
-    <string name="day2">Day 2</string>
-    <string name="day3">Day 3</string>
-    <string name="day4">Day 4</string>
-    <string name="day5">Day 5</string>
-    <string name="day6">Day 6</string>
-    <string name="day7">Day 7</string>
-    
+
+    <!-- Event list item: short view -->
+    <string name="event_item_title">Pilates</string>
+    <string name="event_time">12:00pm - 1:00pm</string>
+    <string name="event_location">Lang Performing Arts Center</string>
+    <string name="event_contact_header">Contact Information:</string>
+    <string name="event_contact_name">Judy Strauser</string>
+    <string name="event_contact_email">jstrauser1@swarthmore.edu</string>
+    <string name="event_contact_phone">(610) 555&#8211;1738</string>
+
+    <!-- For contentDescription on short view-full-screen view ImageButton -->
+    <string name="desc">Touch to navigate to full-screen event view</string>
+
+    <!-- Additional touched list item options -->
+    <string name="add_to_calendar">Add to Calendar</string>
+    <string name="more_info">More Info</string>
+
+    <!-- Event list item: full-screen view -->
+    <string name="event_description">Event Description</string>
+
+    <!-- Tab label text -->
+    <string name="day1">Mon\nJuly\n29</string>
+    <string name="day2">Tue\nJuly\n30</string>
+    <string name="day3">Wed\nAugust\n1</string>
+    <string name="day4">Thu\nAugust\n2</string>
+    <string name="day5">Fri\nAugust\n3</string>
+    <string name="day6">Sat\nAugust\n4</string>
+    <string name="day7">Sun\nAugust\n5</string>
+
     <!-- Tab body text -->
     <string name="body1">Body 1</string>
     <string name="body2">Body 2</string>
