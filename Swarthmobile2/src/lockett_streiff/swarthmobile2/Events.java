@@ -1,5 +1,8 @@
 package lockett_streiff.swarthmobile2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.htmlparser.Parser;
 import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
@@ -25,14 +28,17 @@ import com.androidquery.callback.AjaxStatus;
  * -----------------------------------
  * Scrap adding personal events
  * Users can't modify campus events
- * Scrape HTML more thoroughly
- * Better campus event display 
+ * Scrape HTML more thoroughly - Done
+ * Better campus event display - Pending
  */
 
 public class Events extends Activity {
 
 	private final String tag = "Events";
+	
+	/* Handle events ListView */
 	private ListView eventsPane;
+	private List<Event> eventsList;
 
 	/* Event constants */
 	private final int NAME = 0;
@@ -49,11 +55,26 @@ public class Events extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.events);
 
-		/* Acquire variables from XML */
-		eventsPane = (ListView) this.findViewById(R.id.event_viewing_pane_lv); 
+		/* Handle ListView */
+		eventsPane = (ListView) this.findViewById(R.id.event_viewing_pane_lv);
+		eventsList = new ArrayList<Event>();
+		
+		/* Add a sample event as a test */
+		eventsList.add(new Event(
+				"Orchestra Concert",
+				"7:00pm - 10:00pm",
+				"Lang Concert Hall",
+				"Andrew Hauze\n(610) 555-3940",
+				"David Kim of the Philadelphia orchestra!"
+				));
+		
 		
 		/* Setup */
 		getHTML();
+		
+		
+		
+		
 
 	}
 
