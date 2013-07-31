@@ -128,7 +128,6 @@ public class Events extends Activity {
 
 		/* Only runs if network is online */
 		if (!isNetworkOnline()) {return "";}
-
 		final AQuery aq = new AQuery(Events.this);
 		//final AQuery aq2 = new AQuery(Events.this);
 		//final TextView tv = (TextView) this.findViewById(R.id.tv);
