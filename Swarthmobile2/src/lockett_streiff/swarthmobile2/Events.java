@@ -56,7 +56,7 @@ public class Events extends Activity {
 		setContentView(R.layout.events);
 
 		/* Handle ListView */
-		eventsPane = (ListView) this.findViewById(R.id.event_viewing_pane_lv);
+		//eventsPane = (ListView) this.findViewById(R.id.event_viewing_pane_lv);
 		eventsList = new ArrayList<Event>();
 		
 		/* Add a sample event as a test */
