@@ -27,8 +27,11 @@
             android:layout_height="wrap_content"
             android:background="@color/black"
             android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
             android:text="@string/date_selector_pane"
             android:textColor="@color/white"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <!-- From/To date pickers, labels, and submission button -->
@@ -53,13 +56,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="50dip"
-                    android:text="@string/from_date"
+                    android:text="@string/from_date_label"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/to_date"
+                    android:text="@string/to_date_label"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -81,9 +84,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dip"
                     android:gravity="center_vertical|left"
+                    android:onClick="showFromDatePicker"
                     android:paddingLeft="15dp"
-                    android:paddingRight="40dp"
-                    android:text="September 31, 2014" />
+                    android:paddingRight="40dp" />
 
                 <!-- NOTE: Programmatically set this to be a week from the current day -->
 
@@ -93,9 +96,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|left"
+                    android:onClick="showToDatePicker"
                     android:paddingLeft="15dp"
-                    android:paddingRight="40dp"
-                    android:text="September 31, 2014" />
+                    android:paddingRight="40dp" />
             </LinearLayout>
 
             <!-- Submission button -->
@@ -108,6 +111,7 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="15dip"
                 android:background="@drawable/get_events_button"
+                android:onClick="getEventsOnClick"
                 android:paddingBottom="30dip"
                 android:paddingLeft="20dip"
                 android:paddingRight="20dip"
@@ -141,6 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="25dip"
                     android:background="@drawable/event_shortcut_button"
+                    android:onClick="todayOnClick"
                     android:text="@string/event_shortcut_today" />
 
                 <Button
@@ -148,45 +153,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/event_shortcut_button"
+                    android:onClick="thisMonthOnClick"
                     android:text="@string/event_shortcut_this_month" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <!-- Event list viewing pane -->
-	
-	<LinearLayout 
-	    android:orientation="vertical"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_marginTop="30dip"
-	    >
-	    
-	    <!-- Header -->
-	    
-	    <TextView 
-	        android:id="@+id/events_list_header"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:background="@color/black"
-	        android:textColor="@color/white"
-	        android:textStyle="bold"
-	        android:text="@string/events_list_header" />
-	    
-	    <!-- Actual window -->
-	    
-	    <LinearLayout 
-	        android:id="@+id/event_viewing_window"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:background="@color/garnet"
-	        android:orientation="vertical"
-	        >
-	        
-	        
-	    </LinearLayout>
-	    
-	</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dip"
+        android:orientation="vertical" >
+
+        <!-- Header -->
+
+        <TextView
+            android:id="@+id/events_list_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
+            android:text="@string/events_list_header"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Actual window -->
+
+        <LinearLayout
+            android:id="@+id/event_viewing_window"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/garnet"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
