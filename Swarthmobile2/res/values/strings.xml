@@ -12,10 +12,10 @@
     <string name="get_events">Get Events</string>
     <string name="event_shortcut_today">Today</string>
     <string name="event_shortcut_this_month">This month</string>
-    
+
     <!-- Event list viewing pane -->
     <string name="events_list_header">Events for Selected Range</string>
-    
+
     <!-- Event list item: sample text -->
     <string name="event_item_title">Pilates</string>
     <string name="event_time">12:00pm - 1:00pm</string>
@@ -53,5 +53,7 @@
     <string name="body5">Body 5</string>
     <string name="body6">Body 6</string>
     <string name="body7">Body 7</string>
+    <string name="title_activity_swat_event_parser">SwatEventParser</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

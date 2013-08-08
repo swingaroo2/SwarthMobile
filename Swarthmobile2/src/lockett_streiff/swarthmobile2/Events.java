@@ -160,6 +160,9 @@ public class Events extends Activity {
 		/* Change text for Events header*/
 		TextView tv = (TextView) this.findViewById(R.id.events_list_header);
 		tv.setText("Events for: "+pDate1+" - "+pDate2);
+		
+		/* Get events for specified date range */
+		getEvents(pDate1, pDate2);
 	}
 
 	/*
@@ -206,7 +209,9 @@ public class Events extends Activity {
 		return myMonth+" "+myDay+", "+myYear;
 	}
 
-	/* onClick event listener for from date picker */
+	/* 
+	 * onClick event listener for from date picker
+	 */
 	public void showFromDatePicker(View v) {
 		/* Get the Button that was clicked */
 		DialogFragment newFragment = new FromDatePickerFragment();
@@ -214,7 +219,9 @@ public class Events extends Activity {
 
 	}
 
-	/* onClick event listener for from date picker */
+	/* 
+	 * onClick event listener for from date picker 
+	 */
 	public void showToDatePicker(View v) {
 		/* Get the Button that was clicked */
 		DialogFragment newFragment = new ToDatePickerFragment();
@@ -222,20 +229,26 @@ public class Events extends Activity {
 
 	}
 
-	/* Change START DATE Button text to reflect date change */
+	/* 
+	 * Change START DATE Button text to reflect date change
+	 */
 	public void changeFromDateText(String mDate) {
 		Button mFromButton = (Button)findViewById(R.id.from_date_picker);
 		mFromButton.setText(mDate);
 	}
 
-	/* Change END DATE Button text to reflect date change */
+	/* 
+	 * Change END DATE Button text to reflect date change 
+	 */
 	public void changeToDateText(String mDate) {
 		Button mFromButton = (Button)findViewById(R.id.from_date_picker);
 		mFromButton.setText(mDate);
 	}
 
 
-	/* onClick event listener for buttons */
+	/* 
+	 * onClick event listener for buttons 
+	 */
 	public void showEvents(View v) {
 		Log.i(tag, "showEvents");
 	}
@@ -274,17 +287,16 @@ public class Events extends Activity {
 	/*
 	 * Retrieves HTML from calendar.swarthmore.edu
 	 */
-	private String getHTML() {
-		// Log.i("Events - getHTML", "HTML parsing - 1st round");
+	private void getEvents(String date1, String date2) {
+		// Log.i("Events - getEvents", "HTML parsing - 1st round");
 
 		/* Only runs if network is online */
-		if (!isNetworkOnline()) {
-			return "";
-		}
+		if (!isNetworkOnline()) { return; }
 		final AQuery aq = new AQuery(Events.this);
 		// final AQuery aq2 = new AQuery(Events.this);
 		// final TextView tv = (TextView) this.findViewById(R.id.tv);
-		String url = "http://calendar.swarthmore.edu/calendar";
+		String url = "http://calendar.swarthmore.edu/calendar/EventList.aspx?fromdate="+date1+"&todate="+date2+"&display=Week&view=DateTime";
+		Log.i(tag, "URL: "+url);
 		aq.ajax(url, String.class, new AjaxCallback<String>() {
 
 			@Override
@@ -304,17 +316,16 @@ public class Events extends Activity {
 				// Do I really need to store a value here? There's only gonna be
 				// one PageInfo Object...
 				
-				//getNestedHTML(html);
-				// Log.i(tag, "Nested HTML obtained");
+				getNestedHTML(html);
+				Log.i(tag, "Nested HTML obtained");
 			}
 		});
-		return "";
 	}
 
 	/*
-	 * getHTML helper function
+	 * getEvents helper function
 	 * 
-	 * Navigates the href attributes in each event accessed in getHTML to get
+	 * Navigates the href attributes in each event accessed in getEvents to get
 	 * complete event information
 	 */
 	private String[] getNestedHTML(String html) {
@@ -342,10 +353,9 @@ public class Events extends Activity {
 
 				/* Get event date */
 				if ("TD".equals(name)) {
-					if (tag.getAttribute("class") != null
-							&& tag.getAttribute("class").equals("listheadtext")) {
+					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("listheadtext")) {
 						event.eventArr[DATE] = tag.toPlainTextString();
-						// Log.i("Events", "Date: "+evDate);
+						Log.i("Events", "Date: "+event.eventArr[DATE]);
 
 						/* Set text of tabs to date */
 					}
@@ -353,10 +363,10 @@ public class Events extends Activity {
 
 				/* Get event name */
 				if ("A".equals(name)) {
-					if (tag.getAttribute("class") != null
-							&& tag.getAttribute("class").equals("listtext")) {
+					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("url") && 
+					    tag.getAttribute("href") != null && tag.getAttribute("href").contains("EventList.aspx?")) {
 						event.eventArr[NAME] = tag.toPlainTextString();
-						// Log.i("Events", "Name: "+evName);
+						Log.i("Events", "Name: "+event.eventArr[NAME]);
 					}
 				}
 
@@ -365,14 +375,12 @@ public class Events extends Activity {
 				 * information
 				 */
 				if ("A".equals(name)) {
-					if (tag.getAttribute("class") != null
-							&& tag.getAttribute("class").equals("url")) {
+					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("listtext")) {
 						event.eventArr[TIME] = tag.toPlainTextString();
 
-						/*
-						 * Log.i("Events", "Time: "+event.time); Log.i("Events",
-						 * "------------------------------------------------");
-						 */
+						Log.i("Events", "Time: "+event.eventArr[TIME]);
+						//Log.i("Events", "------------------------------------------------");
+						 
 
 						/*
 						 * Navigate to link in href attribute and parse HTML for
@@ -383,12 +391,6 @@ public class Events extends Activity {
 
 						/* Get event page */
 						event.eventArr[PAGE] = eventPage;
-
-						/*
-						 * Not getting event description - parsing all the <p>
-						 * tags would be a computationally-expensive hassle.
-						 * Just make a "more info" button
-						 */
 
 						/* AQuery AJAX call to navigate into href link */
 						aq.ajax(eventPage, String.class,
@@ -423,20 +425,10 @@ public class Events extends Activity {
 										 * description)
 										 */
 										if ("A".equals(name)) {
-											if (tag.getAttribute("class") != null
-													&& tag.getAttribute(
-															"class")
-															.equals("calendartext")) {
-												if (tag.toPlainTextString()
-														.contains(
-																"Swarthmore College")) {
-													event.eventArr[LOCATION] = tag
-															.toPlainTextString()
-															.replace(
-																	"*Swarthmore College - ",
-																	"");
-													// Log.i("Events",
-													// "Location: "+event.location);
+											if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("calendartext")) {
+												if (tag.toPlainTextString().contains("Swarthmore College")) {
+													event.eventArr[LOCATION] = tag.toPlainTextString().replace("*Swarthmore College - ","");
+													Log.i("Events", "Location: "+event.eventArr[LOCATION]);
 
 													/*
 													 * How do I navigate
@@ -461,11 +453,8 @@ public class Events extends Activity {
 												String description;
 												if ((description = tag
 														.getAttribute("content")) != null) {
-													// Log.i("Events",
-													// "----------------------------------------------");
-													// Log.i("Events",
-													// description);
 													event.eventArr[DESCRIPTION] = description;
+													// Log.i("Events", event.eventArr[DESCRIPTION]);
 												}
 											}
 										}
@@ -487,11 +476,8 @@ public class Events extends Activity {
 													 * name, in that
 													 * order.
 													 */
-													// Log.i("Events",contactInfo);
-													event.eventArr[CONTACT] = parseContactInfo(contactInfo
-															.replace(
-																	"Contact Information:",
-																	""));
+													event.eventArr[CONTACT] = parseContactInfo(contactInfo.replace("Contact Information:",""));
+													Log.i("Events",contactInfo);
 												}
 											}
 										}
@@ -522,7 +508,7 @@ public class Events extends Activity {
 
 		/*
 		 * Return the String[] in event (the PageInfo class instance). Aren't I
-		 * clever?
+		 * clever? More like: is this even necessary?
 		 */
 		// Log.i("Events", "Event: "+Arrays.toString(event.eventArr));
 		return event.eventArr;

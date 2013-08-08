@@ -21,12 +21,17 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="lockett_streiff.swarthmobile2.Events"
             android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="lockett_streiff.swarthmobile2.SwatEventParser"
+            android:label="@string/title_activity_swat_event_parser" >
         </activity>
     </application>
 
