@@ -16,6 +16,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -24,7 +25,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -38,7 +41,7 @@ import com.androidquery.callback.AjaxStatus;
 
 public class Events extends Activity {
 
-	private final String tag = "Events";
+	private final static String tag = "Events";
 
 	/* Constants */
 	private static final int START_DATE = 0;
@@ -47,9 +50,12 @@ public class Events extends Activity {
 		"April", "May", "June", "July", "August", "September",
 		"October", "November", "December" };
 
+	/* Date range selection Dialog stuff */
+	static View layout;
+
 	/* Buttons for date range selection */
-	private Button fromDate;
-	private Button toDate;
+	static Button fromDate;
+	static Button toDate;
 
 	/* Handle events ListView */
 	private ListView eventsPane;
@@ -70,13 +76,8 @@ public class Events extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.events);
 
-		/* Get the Buttons */
-		fromDate = (Button) this.findViewById(R.id.from_date_picker);
-		toDate = (Button) this.findViewById(R.id.to_date_picker);
-
 		/* Handle ListView */
-		// eventsPane = (ListView)
-		// this.findViewById(R.id.event_viewing_pane_lv);
+		//eventsPane = I'll get back to this later...
 		eventsList = new ArrayList<Event>();
 
 		/* Add a sample event as a test */
@@ -84,8 +85,8 @@ public class Events extends Activity {
 				"Lang Concert Hall", "Andrew Hauze\n(610) 555-3940",
 				"David Kim of the Philadelphia orchestra!"));
 
-		/* Setup */
-		setUpDateButtons();
+		/* Setup  - stash this in Dialog creation code */
+		//setUpDateButtons();
 
 
 	}
@@ -93,14 +94,30 @@ public class Events extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		/* Inflate the menu; this adds items to the action bar if it is present. */
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.swat_events, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_get_date_range:
+			//Toast.makeText(this, "Open Dialog", Toast.LENGTH_SHORT).show();
+			showDialog();
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/* 
 	 * onClick method for the Today shortcut Button 
 	 */
 	public void todayOnClick(View v) {
+		/* Get Buttons from inflated Layout */
+		Button b1 = (Button) layout.findViewById(R.id.from_date_picker);
+		Button b2 = (Button) layout.findViewById(R.id.to_date_picker);
+
 		/* Set up Calendar instance */
 		final Calendar c = Calendar.getInstance();
 
@@ -111,8 +128,8 @@ public class Events extends Activity {
 		String date1 = getDateAsString(year, month, day);
 
 		/* Set Button text to default values */
-		fromDate.setText(date1);
-		toDate.setText(date1);
+		b1.setText(date1);
+		b2.setText(date1);
 
 		/* Method call to Get Events onClick */
 		getEventsOnClick(v);
@@ -122,6 +139,10 @@ public class Events extends Activity {
 	 * onClick method for the This Month shortcut Button 
 	 */
 	public void thisMonthOnClick(View v) {
+		/* Get Buttons from inflated Layout */
+		Button b1 = (Button) layout.findViewById(R.id.from_date_picker);
+		Button b2 = (Button) layout.findViewById(R.id.to_date_picker);
+
 		/* Get Strings for current and last days of month */
 		final Calendar c = Calendar.getInstance();
 
@@ -129,15 +150,15 @@ public class Events extends Activity {
 		int month = c.get(Calendar.MONTH);
 		int day = c.get(Calendar.DAY_OF_MONTH);		
 
-		/* Not so fast! There's no point in getting events before the current day! */
+		/* Not so fast! There's no point in getting events before the current day. */
 		String date1 = getDateAsString(year, month, day);
-		fromDate.setText(date1);
+		b1.setText(date1);
 
 		/* Get last day of the month */
 		c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
 		int lastDay = c.get(Calendar.DAY_OF_MONTH);
 		String date2 = getDateAsString(year, month, lastDay);
-		toDate.setText(date2);
+		b2.setText(date2);
 
 		/* Method call to Get Events onClick */
 		getEventsOnClick(v);
@@ -150,17 +171,17 @@ public class Events extends Activity {
 	public void getEventsOnClick(View v) {
 
 		/* Get text from date-picker buttons */
-		String date1 = (String) ((Button) this.findViewById(R.id.from_date_picker)).getText();
-		String date2 = (String) ((Button) this.findViewById(R.id.to_date_picker)).getText();
+		String date1 = (String) ((Button) layout.findViewById(R.id.from_date_picker)).getText();
+		String date2 = (String) ((Button) layout.findViewById(R.id.to_date_picker)).getText();
 
 		/* Convert to mm/dd/yyyy format for passing into getEvents */
 		String pDate1 = parseDateString(date1);
 		String pDate2 = parseDateString(date2);
-		
+
 		/* Change text for Events header*/
 		TextView tv = (TextView) this.findViewById(R.id.events_list_header);
 		tv.setText("Events for: "+pDate1+" - "+pDate2);
-		
+
 		/* Get events for specified date range */
 		getEvents(pDate1, pDate2);
 	}
@@ -179,30 +200,10 @@ public class Events extends Activity {
 		return dateStr;
 	}
 
-	/* Set the Buttons' text to 1-week default */
-	private void setUpDateButtons() {
-		/* Set up Calendar instances */
-		final Calendar c = Calendar.getInstance();
-		final Calendar c2 = Calendar.getInstance();
-		c2.add(Calendar.DAY_OF_MONTH, 7);
-
-		int year = c.get(Calendar.YEAR);
-		int month = c.get(Calendar.MONTH);
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		int day2 = c2.get(Calendar.DAY_OF_MONTH);			
-
-		String date1 = getDateAsString(year, month, day);
-		String date2 = getDateAsString(year, month, day2);
-
-		/* Set Button text to default values */
-		fromDate.setText(date1);
-		toDate.setText(date2);
-	}
-
 	/*
 	 * setUpDateButtons helper function
 	 */
-	private String getDateAsString(int year, int month, int day) {
+	private static String getDateAsString(int year, int month, int day) {
 		String myMonth = Events.monthsArr[month];
 		String myDay = String.valueOf(day);
 		String myYear = String.valueOf(year);
@@ -282,6 +283,11 @@ public class Events extends Activity {
 		return status;
 	}
 
+	/* Shows date selector AlertDialogFragment */
+	void showDialog() {
+		DialogFragment newFragment = MyAlertDialogFragment.newInstance();
+		newFragment.show(getFragmentManager(), "dialog");
+	}
 	/////////// Event retrieval backend ///////////
 
 	/*
@@ -315,7 +321,7 @@ public class Events extends Activity {
 				/* Second round HTML parsing - href tags */
 				// Do I really need to store a value here? There's only gonna be
 				// one PageInfo Object...
-				
+
 				getNestedHTML(html);
 				Log.i(tag, "Nested HTML obtained");
 			}
@@ -364,7 +370,7 @@ public class Events extends Activity {
 				/* Get event name */
 				if ("A".equals(name)) {
 					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("url") && 
-					    tag.getAttribute("href") != null && tag.getAttribute("href").contains("EventList.aspx?")) {
+							tag.getAttribute("href") != null && tag.getAttribute("href").contains("EventList.aspx?")) {
 						event.eventArr[NAME] = tag.toPlainTextString();
 						Log.i("Events", "Name: "+event.eventArr[NAME]);
 					}
@@ -380,7 +386,7 @@ public class Events extends Activity {
 
 						Log.i("Events", "Time: "+event.eventArr[TIME]);
 						//Log.i("Events", "------------------------------------------------");
-						 
+
 
 						/*
 						 * Navigate to link in href attribute and parse HTML for
@@ -484,8 +490,7 @@ public class Events extends Activity {
 									}
 								};
 								/* Execute inner HTML parsing */
-								Parser parser = new Parser(new Lexer(
-										html));
+								Parser parser = new Parser(new Lexer(html));
 								try {
 									parser.visitAllNodesWith(visitor);
 								} catch (ParserException e) {
@@ -553,9 +558,60 @@ public class Events extends Activity {
 		return myCi;
 	}
 
-
-
 	///////////////////// Inner Classes /////////////////////
+
+	public static class MyAlertDialogFragment extends DialogFragment {
+
+		public static MyAlertDialogFragment newInstance() {
+			MyAlertDialogFragment frag = new MyAlertDialogFragment();
+			Bundle args = new Bundle();
+			args.putString("Select Date Range", "daterange");
+			frag.setArguments(args);
+
+
+			return frag;
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			layout = inflater.inflate(R.layout.event_date_selector, null);
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setView(layout);
+			builder.setTitle("Select Date Range");
+
+			Button b1 = (Button) layout.findViewById(R.id.from_date_picker);
+			Button b2 = (Button) layout.findViewById(R.id.to_date_picker);
+			Button b3 = (Button) layout.findViewById(R.id.submission_buton);
+
+			setUpDateButtons(b1,b2);
+
+			return builder.create();
+		}
+
+		/* Set the Buttons' text to 1-week default */
+		private static void setUpDateButtons(Button from, Button to) {
+
+			/* Set up Calendar instances */
+			final Calendar c = Calendar.getInstance();
+			final Calendar c2 = Calendar.getInstance();
+			c2.add(Calendar.DAY_OF_MONTH, 7);
+
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			int day2 = c2.get(Calendar.DAY_OF_MONTH);			
+
+			String date1 = getDateAsString(year, month, day);
+			String date2 = getDateAsString(year, month, day2);
+
+			/* Set Button text to default values */
+			from.setText(date1);
+			to.setText(date2);
+		}
+
+	}
+
 
 	/* 
 	 * Since I have only two DatePickers to manage, this brute-force method 
@@ -587,7 +643,7 @@ public class Events extends Activity {
 			if (validate(year, (1+month), day)) {
 				/* Get new date for Button */
 				String myDate = getDateAsString(year, month, day);
-				clicked = (Button) getActivity().findViewById(R.id.from_date_picker);
+				clicked = (Button) layout.findViewById(R.id.from_date_picker);
 				clicked.setText(myDate);
 			}
 
@@ -615,7 +671,7 @@ public class Events extends Activity {
 		private boolean validate(int selYear, int selMonth, int selDay) {
 			Calendar c = Calendar.getInstance();
 
-			String date2 = (String) ((Button) getActivity().findViewById(R.id.to_date_picker)).getText();
+			String date2 = (String) ((Button) layout.findViewById(R.id.to_date_picker)).getText();
 
 			int currYear = c.get(Calendar.YEAR);
 			int currMonth = c.get(Calendar.MONTH);
@@ -667,7 +723,7 @@ public class Events extends Activity {
 			if (validate(year, (1+month), day)) {
 				/* Get new date for Button */
 				String myDate = getDateAsString(year, month, day);
-				clicked = (Button) getActivity().findViewById(R.id.to_date_picker);
+				clicked = (Button) layout.findViewById(R.id.to_date_picker);
 				clicked.setText(myDate);
 			}
 		}
@@ -694,11 +750,11 @@ public class Events extends Activity {
 		private boolean validate(int selYear, int selMonth, int selDay) {
 			Calendar c = Calendar.getInstance();
 
-			String date1 = (String) ((Button) getActivity().findViewById(R.id.from_date_picker)).getText();
+			String date1 = (String) ((Button) layout.findViewById(R.id.from_date_picker)).getText();
 
-			int currYear = c.get(Calendar.YEAR);
+			/*int currYear = c.get(Calendar.YEAR);
 			int currMonth = c.get(Calendar.MONTH);
-			int currDay = c.get(Calendar.DAY_OF_MONTH);
+			int currDay = c.get(Calendar.DAY_OF_MONTH);*/
 
 			int[] pDate1 = getDateAsInts(date1);
 

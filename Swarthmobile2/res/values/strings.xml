@@ -11,10 +11,10 @@
     <string name="to_date_label">End: </string>
     <string name="get_events">Get Events</string>
     <string name="event_shortcut_today">Today</string>
-    <string name="event_shortcut_this_month">This month</string>
+    <string name="event_shortcut_this_month">This Month</string>
 
     <!-- Event list viewing pane -->
-    <string name="events_list_header">Events for Selected Range</string>
+    <string name="events_list_header">Campus Events</string>
 
     <!-- Event list item: sample text -->
     <string name="event_item_title">Pilates</string>
@@ -55,5 +55,6 @@
     <string name="body7">Body 7</string>
     <string name="title_activity_swat_event_parser">SwatEventParser</string>
     <string name="hello_world">Hello world!</string>
+    <string name="get_date_range">Find Campus Events</string>
 
 </resources>

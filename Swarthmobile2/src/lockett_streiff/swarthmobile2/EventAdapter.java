@@ -16,8 +16,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 	public EventAdapter(Activity context, List<Event> events) {
 		super(context, R.layout.list_item);
 		this.events = events;
-		this.inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -39,6 +38,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 
 		/* Need to change String resources to match Event object fields */
+		
 		
 		View vi = convertView;
 

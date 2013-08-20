@@ -23,9 +23,6 @@ public class MainMenu extends Activity {
 	private ListView lv;
 	private ArrayAdapter<String> adapter;
 	
-	/* Intents for navigating to different applets */
-	private Intent iEvents;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +40,6 @@ public class MainMenu extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> av, View v, int position,
 					long id) {
-				// Will likely have to change this when setting up carousel
 				String clicked = (String) ((TextView) v).getText();
 				//Log.i(tag, clicked);
 				

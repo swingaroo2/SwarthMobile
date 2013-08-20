@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item 
+        android:id="@+id/action_get_date_range"
+        android:showAsAction="ifRoom"
+        android:title="@string/get_date_range"/>
+
+</menu>
