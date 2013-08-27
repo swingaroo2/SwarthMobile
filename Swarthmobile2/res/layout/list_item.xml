@@ -1,126 +1,113 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="@color/black"
-    android:orientation="vertical"
-    android:padding="5dp" >
-
-    <!-- Event name bar -->
-
-    <TextView
-        android:id="@+id/event_name_bar"
-        android:layout_width="match_parent"
-        android:layout_height="30dip"
-        android:background="@color/black"
-        android:paddingLeft="5dp"
-        android:text="@string/event_item_title"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold" />
-
-    <!-- Container for event description box and 'more detail' button -->
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/list_item_body_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="horizontal" >
+        android:layout_height="200dp"
+        android:background="@color/black"
+        android:orientation="vertical"
+        android:padding="5dp" >
 
-        <!-- Event 'less-detail' box -->
+        <!-- Event name bar -->
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:background="@color/black"
+            android:paddingLeft="5dp"
+            android:text="@string/event_item_title"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <!-- Container for event description box and 'more detail' button -->
 
         <LinearLayout
-            android:id="@+id/event_description"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp" >
-
-            <!-- Time -->
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/event_time"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <!-- Location -->
-
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/event_location"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <!-- Contact Information: Container -->
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dip"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" >
-
-                <!-- Contact Information: Header -->
-
-                <TextView
-                    android:id="@+id/event_contact_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/event_contact_header"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <!-- Contact Information: Content -->
-
-                <TextView
-                    android:id="@+id/event_contact_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/event_contact_name"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/event_contact_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/event_contact_email"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/event_contact_phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/event_contact_phone"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Arrow icon for more info (think reddit is fun Android app) -->
-
-        <ImageButton
-            android:id="@+id/more_event_info_button"
-            style="?android:attr/borderlessButtonStyle"
+            android:id="@+id/list_item_body_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/arrow"
-            android:contentDescription="@string/desc" />
+            android:background="@color/white"
+            android:orientation="horizontal" >
+
+            <!-- Event 'less-detail' box -->
+
+            <LinearLayout
+                android:id="@+id/event_description"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <!-- Time -->
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_time"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Location -->
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_location"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Contact Information: Container -->
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dip"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="vertical"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:textStyle="bold" >
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Arrow icon for more info (think reddit is fun Android app) -->
+
+            <ImageButton
+                android:id="@+id/more_event_info_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/arrow"
+                android:contentDescription="@string/desc" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Additional options shown by touching the list item -->
+
+    <LinearLayout
+        android:id="@+id/more_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/add_to_calendar"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/add_to_calendar" />
     </LinearLayout>
 
 </LinearLayout>
