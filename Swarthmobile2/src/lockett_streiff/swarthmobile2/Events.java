@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,11 +15,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.htmlparser.Parser;
-import org.htmlparser.Tag;
-import org.htmlparser.lexer.Lexer;
-import org.htmlparser.util.ParserException;
-import org.htmlparser.visitors.NodeVisitor;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -49,10 +45,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
-
 public class Events extends Activity {
 
 	private final static String tag = "Events";
@@ -61,8 +53,8 @@ public class Events extends Activity {
 	private static final int START_DATE = 0;
 	private static final int END_DATE = 1;
 	private static final String[] monthsArr = { "January", "February", "March",
-		"April", "May", "June", "July", "August", "September",
-		"October", "November", "December" };
+			"April", "May", "June", "July", "August", "September", "October",
+			"November", "December" };
 
 	/* Date range selection Dialog stuff */
 	static View layout;
@@ -72,8 +64,9 @@ public class Events extends Activity {
 	static Button toDate;
 
 	/* Handle events ListView */
-	private ListView eventsPane;
-	private List<Event> eventsList;
+	private static ListView eventsView;
+	private static List<Event> eventsList;
+	static EventAdapter eventsAdapter;
 
 	/* Event constants */
 	private final int NAME = 0;
@@ -84,8 +77,8 @@ public class Events extends Activity {
 	private final int PAGE = 5;
 	private final int DESCRIPTION = 6;
 	private final int CONTACT = 7;
-	
-	/* For XML parsing*/
+
+	/* For XML parsing */
 	String streamTitle = "";
 
 	@Override
@@ -93,18 +86,14 @@ public class Events extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.events);
 
-		/* Handle ListView */
-		//eventsPane = I'll get back to this later...
+		/* Set up ListView with sample test event */
+		// Event sample = new Event("Orchestra concert", "7:00 PM - 10:00 PM",
+		// "November 17, 2013", "Lang Concert Hall");
 		eventsList = new ArrayList<Event>();
-
-		/* Add a sample event as a test */
-		/*eventsList.add(new Event("Orchestra Concert", "7:00pm - 10:00pm",
-				"Lang Concert Hall", "Andrew Hauze\n(610) 555-3940",
-				"David Kim of the Philadelphia orchestra!"));*/
-
-		/* Setup  - stash this in Dialog creation code */
-		//setUpDateButtons();
-
+		eventsView = (ListView) this.findViewById(R.id.events_lv);
+		eventsAdapter = new EventAdapter(Events.this, eventsList);
+		// eventsAdapter.add(sample);
+		eventsView.setAdapter(eventsAdapter);
 
 	}
 
@@ -120,15 +109,15 @@ public class Events extends Activity {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_get_date_range:
-			//Toast.makeText(this, "Open Dialog", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "Open Dialog", Toast.LENGTH_SHORT).show();
 			showDialog();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	/* 
-	 * onClick method for the Today shortcut Button 
+	/*
+	 * onClick method for the Today shortcut Button
 	 */
 	public void todayOnClick(View v) {
 		/* Get Buttons from inflated Layout */
@@ -140,7 +129,7 @@ public class Events extends Activity {
 
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH);
-		int day = c.get(Calendar.DAY_OF_MONTH);		
+		int day = c.get(Calendar.DAY_OF_MONTH);
 
 		String date1 = getDateAsString(year, month, day);
 
@@ -152,8 +141,8 @@ public class Events extends Activity {
 		getEventsOnClick(v);
 	}
 
-	/* 
-	 * onClick method for the This Month shortcut Button 
+	/*
+	 * onClick method for the This Month shortcut Button
 	 */
 	public void thisMonthOnClick(View v) {
 		/* Get Buttons from inflated Layout */
@@ -165,9 +154,12 @@ public class Events extends Activity {
 
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH);
-		int day = c.get(Calendar.DAY_OF_MONTH);		
+		int day = c.get(Calendar.DAY_OF_MONTH);
 
-		/* Not so fast! There's no point in getting events before the current day. */
+		/*
+		 * Not so fast! There's no point in getting events before the current
+		 * day.
+		 */
 		String date1 = getDateAsString(year, month, day);
 		b1.setText(date1);
 
@@ -182,38 +174,42 @@ public class Events extends Activity {
 
 	}
 
-	/* 
-	 * onClick method for the Get Events Button 
+	/*
+	 * onClick method for the Get Events Button
 	 */
 	public void getEventsOnClick(View v) {
 
 		/* Get text from date-picker buttons */
-		String date1 = (String) ((Button) layout.findViewById(R.id.from_date_picker)).getText();
-		String date2 = (String) ((Button) layout.findViewById(R.id.to_date_picker)).getText();
+		String date1 = (String) ((Button) layout
+				.findViewById(R.id.from_date_picker)).getText();
+		String date2 = (String) ((Button) layout
+				.findViewById(R.id.to_date_picker)).getText();
 
 		/* Convert to mm/dd/yyyy format for passing into getEvents */
 		String pDate1 = parseDateString(date1);
 		String pDate2 = parseDateString(date2);
 
-		/* Change text for Events header*/
+		/* Change text for Events header */
 		TextView tv = (TextView) this.findViewById(R.id.events_list_header);
-		tv.setText("Events for: "+pDate1+" - "+pDate2);
+		tv.setText("Events for: " + pDate1 + " - " + pDate2);
 
 		/* Get events for specified date range */
 		getEvents(pDate1, pDate2);
 	}
 
 	/*
-	 * getEventsOnClick helper function
-	 * Converts date String to mm/dd/yyyy format
+	 * getEventsOnClick helper function Converts date String to mm/dd/yyyy
+	 * format
 	 */
 	private String parseDateString(String date) {
-		String[] splitDate = date.replace(",","").split(" ");
+		String[] splitDate = date.replace(",", "").split(" ");
 		DateTimeFormatter format = DateTimeFormat.forPattern("MMMMM");
-		DateTime instance = format.withLocale(Locale.ENGLISH).parseDateTime(splitDate[0]);
+		DateTime instance = format.withLocale(Locale.ENGLISH).parseDateTime(
+				splitDate[0]);
 		int month_number = instance.getMonthOfYear();
-		int[] pDate = new int[]{month_number, Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[2])};
-		String dateStr = pDate[0]+"/"+pDate[1]+"/"+pDate[2];
+		int[] pDate = new int[] { month_number, Integer.parseInt(splitDate[1]),
+				Integer.parseInt(splitDate[2]) };
+		String dateStr = pDate[0] + "/" + pDate[1] + "/" + pDate[2];
 		return dateStr;
 	}
 
@@ -224,10 +220,10 @@ public class Events extends Activity {
 		String myMonth = Events.monthsArr[month];
 		String myDay = String.valueOf(day);
 		String myYear = String.valueOf(year);
-		return myMonth+" "+myDay+", "+myYear;
+		return myMonth + " " + myDay + ", " + myYear;
 	}
 
-	/* 
+	/*
 	 * onClick event listener for from date picker
 	 */
 	public void showFromDatePicker(View v) {
@@ -237,8 +233,8 @@ public class Events extends Activity {
 
 	}
 
-	/* 
-	 * onClick event listener for from date picker 
+	/*
+	 * onClick event listener for from date picker
 	 */
 	public void showToDatePicker(View v) {
 		/* Get the Button that was clicked */
@@ -247,25 +243,24 @@ public class Events extends Activity {
 
 	}
 
-	/* 
+	/*
 	 * Change START DATE Button text to reflect date change
 	 */
 	public void changeFromDateText(String mDate) {
-		Button mFromButton = (Button)findViewById(R.id.from_date_picker);
+		Button mFromButton = (Button) findViewById(R.id.from_date_picker);
 		mFromButton.setText(mDate);
 	}
 
-	/* 
-	 * Change END DATE Button text to reflect date change 
+	/*
+	 * Change END DATE Button text to reflect date change
 	 */
 	public void changeToDateText(String mDate) {
-		Button mFromButton = (Button)findViewById(R.id.from_date_picker);
+		Button mFromButton = (Button) findViewById(R.id.from_date_picker);
 		mFromButton.setText(mDate);
 	}
 
-
-	/* 
-	 * onClick event listener for buttons 
+	/*
+	 * onClick event listener for buttons
 	 */
 	public void showEvents(View v) {
 		Log.i(tag, "showEvents");
@@ -306,248 +301,26 @@ public class Events extends Activity {
 		newFragment.show(getFragmentManager(), "dialog");
 	}
 
-	/////////// Event retrieval backend ///////////
+	// ///////// Event retrieval backend ///////////
 
 	/*
 	 * Retrieves HTML from calendar.swarthmore.edu
 	 */
 	private void getEvents(String date1, String date2) {
-		
+
 		/* Only runs if network is online */
-		if (!isNetworkOnline()) { return; }
-		String URL = "http://calendar.swarthmore.edu/calendar/RSSSyndicator.aspx?category=&location=&type=N&starting="+date1+"&ending="+date2+"&binary=Y&keywords=&ics=Y";
-		Log.i(tag, "URL: "+URL);
-		
+		if (!isNetworkOnline()) {
+			return;
+		}
+		String URL = "http://calendar.swarthmore.edu/calendar/RSSSyndicator.aspx?category=&location=&type=N&starting="
+				+ date1 + "&ending=" + date2 + "&binary=Y&keywords=&ics=Y";
+		// Log.i(tag, "URL: " + URL);
+
 		new RetreiveFeedTask().execute(URL);
-		
+
 	}
 
-	/*
-	 * getEvents helper function
-	 * 
-	 * Navigates the href attributes in each event accessed in getEvents to get
-	 * complete event information
-	 */
-	private String[] getNestedHTML(String html) {
-		class PageInfo {
-
-			/* Event fields */
-			public String[] eventArr;
-
-			/* Initialize to null */
-			PageInfo() {
-				eventArr = new String[8];
-			}
-		}
-
-		/* PageInfo enables us to circumvent scoping issues when scraping HTML */
-		final PageInfo event = new PageInfo();
-
-		/* Start parsing HTML */
-		NodeVisitor visitor = new NodeVisitor() {
-			AQuery aq = new AQuery(Events.this);
-
-			public void visitTag(Tag tag) {
-				String name = tag.getTagName();
-				String url = "http://calendar.swarthmore.edu/calendar/";
-
-				/* Get event date */
-				if ("TD".equals(name)) {
-					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("listheadtext")) {
-						event.eventArr[DATE] = tag.toPlainTextString();
-						//Log.i("Events", "Date: "+event.eventArr[DATE]);
-
-						/* Set text of tabs to date */
-					}
-				}
-
-				/* Get event name */
-				if ("A".equals(name)) {
-					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("url") && 
-							tag.getAttribute("href") != null && tag.getAttribute("href").contains("EventList.aspx?")) {
-						event.eventArr[NAME] = tag.toPlainTextString();
-						//Log.i("Events", "Name: "+event.eventArr[NAME]);
-					}
-				}
-
-				/*
-				 * Get event time, page, location, description, and contact
-				 * information
-				 */
-				if ("A".equals(name)) {
-					if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("url")) {
-						event.eventArr[TIME] = tag.toPlainTextString();
-
-						//Log.i("Events", "Time: "+event.eventArr[TIME]);
-						//Log.i("Events", "------------------------------------------------");
-
-
-						/*
-						 * Navigate to link in href attribute and parse HTML for
-						 * event description and location
-						 */
-						String eventPage = url + tag.getAttribute("href");
-						// Log.i("Events", "Navigating to url: "+eventPage);
-
-						/* Get event page */
-						event.eventArr[PAGE] = eventPage;
-
-						/* AQuery AJAX call to navigate into href link */
-						aq.ajax(eventPage, String.class,
-								new AjaxCallback<String>() {
-
-							@Override
-							public void callback(String url,
-									String html, AjaxStatus status) {
-
-								/* Debugging */
-								/*
-								 * TextView tv = (TextView)
-								 * findViewById(R.id.tv);
-								 * tv.setText(html);
-								 * tv.setMovementMethod(new
-								 * ScrollingMovementMethod());
-								 * Log.i("visitTag",
-								 * "Internal HTML status: "
-								 * +status.getMessage());
-								 */
-
-								/* Get event location */
-								NodeVisitor visitor = new NodeVisitor() {
-									public void visitTag(Tag tag) {
-										String name = tag.getTagName();
-
-										/*
-										 * Get location (note: can add a
-										 * "More info" button to go to
-										 * event page in lieu of
-										 * description)
-										 */
-										if ("A".equals(name)) {
-											if (tag.getAttribute("class") != null && tag.getAttribute("class").equals("calendartext")) {
-												if (tag.toPlainTextString().contains("Swarthmore College")) {
-													event.eventArr[LOCATION] = tag.toPlainTextString().replace("*Swarthmore College - ","");
-													Log.i("Events", "Location: "+event.eventArr[LOCATION]);
-
-													/*
-													 * How do I navigate
-													 * scoping in order
-													 * to retrieve the
-													 * location? Answer:
-													 * PageInfo, it's
-													 * actually useful
-													 * for something
-													 * after all!
-													 */
-												}
-											}
-										}
-
-										/* Get event description */
-										if (("META").equals(name)) {
-											if (tag.getAttribute("name") != null
-													&& tag.getAttribute(
-															"name")
-															.equals("description")) {
-												String description;
-												if ((description = tag
-														.getAttribute("content")) != null) {
-													event.eventArr[DESCRIPTION] = description;
-													// Log.i("Events", event.eventArr[DESCRIPTION]);
-												}
-											}
-										}
-
-										/* Get event contact information */
-										if (("TD").equals(name)) {
-											if (tag.getAttribute("class") != null
-													&& tag.getAttribute("class").equals("detailsview")) {
-												String contactInfo = tag.toPlainTextString();
-												if (contactInfo.contains("Contact Information")) {
-													// Log.i("Events","----------------------------------------------");
-													/*
-													 * Idea: split on
-													 * email, phone, and
-													 * name, in that
-													 * order.
-													 */
-													event.eventArr[CONTACT] = parseContactInfo(contactInfo.replace("Contact Information:",""));
-													//Log.i("Events",contactInfo);
-												}
-											}
-										}
-									}
-								};
-								/* Execute inner HTML parsing */
-								Parser parser = new Parser(new Lexer(html));
-								try {
-									parser.visitAllNodesWith(visitor);
-								} catch (ParserException e) {
-									e.printStackTrace();
-								}
-							}
-						});
-					}
-				}
-			}
-		};
-
-		/* Execute outer HTML parsing */
-		Parser parser = new Parser(new Lexer(html));
-		try {
-			parser.visitAllNodesWith(visitor);
-		} catch (ParserException e) {
-			e.printStackTrace();
-		}
-
-		/*
-		 * Return the String[] in event (the PageInfo class instance). Aren't I
-		 * clever? More like: is this even necessary?
-		 */
-		Log.i("Events", "Event: "+Arrays.toString(event.eventArr));
-		return event.eventArr;
-	}
-
-	/*
-	 * getNestedHTML helper function
-	 * 
-	 * Contact information is passed in as a messy String that contains up to
-	 * three pieces of useful information: name, phone, and email.
-	 * 
-	 * Splitting in reverse order should produce a cleaner String delimited by
-	 * newlines.
-	 */
-	public String parseContactInfo(String ci) {
-		String myCi = "";
-		ci = ci.replace(": ", "");
-		String[] ciSplit = ci.split("Email|Name|Phone");
-		// Log.i("Events - parseContactInfo",Arrays.toString(ciSplit));
-
-		for (String str : ciSplit) {
-			/* Emails have the @ symbol */
-			if (str.contains("@")) {
-				myCi += (str.trim() + "\n");
-			}
-
-			/* Phone numbers have the (610) extension */
-			else if (str.contains("(610)")) {
-				myCi += (str.trim() + "\n");
-			}
-
-			/* Otherwise, it's a name */
-			else {
-				myCi += (str.trim() + "\n");
-			}
-		}
-
-		myCi = myCi.substring(1, myCi.length() - 1);
-		// Log.i("Events - parseContactInfo",myCi);
-		// Log.i("Events - parseContactInfo","-----------------------------------------------");
-
-		return myCi;
-	}
-
-	///////////////////// Inner Classes /////////////////////
+	// /////////////////// Inner Classes /////////////////////
 	class RetreiveFeedTask extends AsyncTask<String, Void, Void> {
 
 		protected Void doInBackground(String... urls) {
@@ -567,8 +340,9 @@ public class Events extends Activity {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-						//TextView result = (TextView) findViewById(R.id.result);
-						//result.setText(streamTitle);
+						// TextView result = (TextView)
+						// findViewById(R.id.result);
+						// result.setText(streamTitle);
 
 					}
 				});
@@ -621,6 +395,7 @@ public class Events extends Activity {
 		public void startDocument() throws SAXException {
 			// TODO Auto-generated method stub
 			strTitle = "--- Start Document ---\n";
+			Events.eventsList.clear();
 		}
 
 		@Override
@@ -672,11 +447,35 @@ public class Events extends Activity {
 			} else if (localName.equalsIgnoreCase("category")) {
 				/* The last tag in an event */
 				strCategory += strElement + "\n";
-				Log.i(tag, "TITLE: "+title);
-				Log.i(tag, "DATE: "+strElement);
-				Log.i(tag, "TIME: "+time);
-				Log.i(tag,"LOCATION: " + location);
-				Log.i(tag, "-------------------------------");
+				// Log.i(tag, "TITLE: " + title);
+				/*
+				 * Log.i(tag, "DATE: " + strElement); Log.i(tag, "TIME: " +
+				 * time); Log.i(tag, "LOCATION: " + location); Log.i(tag,
+				 * "-------------------------------");
+				 */
+				final Event event = new Event(title, time, strElement, location);
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+
+						/* Create a new Event */
+						if (event.getTime().contains("All Day")) {
+							event.setTime("All Day");
+
+						}
+
+						/*Log.i(tag, " Title: " + event.getTitle());
+						Log.i(tag, " Time: " + event.getTime());
+						Log.i(tag, " Date: " + event.getDate());
+						Log.i(tag, " Location: " + event.getLocation());
+						Log.i(tag, "-------------------------------");*/
+						Events.eventsList.add(event);
+						eventsAdapter.notifyDataSetChanged();
+
+					}
+				});
+
 			} else if (localName.equalsIgnoreCase("encoded")) {
 				encodedEnd = true;
 				encodedStart = false;
@@ -685,10 +484,10 @@ public class Events extends Activity {
 				String[] encodedArrLoc = Arrays.copyOfRange(encodedArr, 1,
 						encodedArr.length);
 				String text = Arrays.toString(encodedArr);
-				//Log.i(tag, "ENCODED: " + text);
+				// Log.i(tag, "ENCODED: " + text);
 				time = getTime(text);
 				location = getLocation(encodedArrLoc);
-				
+
 			}
 			state = stateUnknown;
 		}
@@ -700,7 +499,7 @@ public class Events extends Activity {
 			String strCharacters = new String(ch, start, length);
 			if (state == stateTitle
 					&& !strCharacters
-					.contains("Swarthmore College Events Calendar")) {
+							.contains("Swarthmore College Events Calendar")) {
 				strElement += strCharacters;
 				streamTitle += strElement + "\n";
 			} else if (state == stateCategory || state == stateLink) {
@@ -729,30 +528,33 @@ public class Events extends Activity {
 			String endTime = "";
 			String time = "";
 			String modified = html.replace("/", "").replace("<b>", "")
-					.replace("&nbsp", "").replace(";", "").replace(", ", "").replace(",","");
+					.replace("&nbsp", "").replace(";", "").replace(", ", "")
+					.replace(",", "");
 			String[] parsed = modified.split("<td>");
-			parsed = Arrays.copyOfRange(parsed, 1,parsed.length);
-			List<String> parsedAL = new ArrayList<String> (Arrays.asList(parsed));
-			//Log.i(tag, "parsed: " + parsedAL.toString());
-			
+			parsed = Arrays.copyOfRange(parsed, 1, parsed.length);
+			List<String> parsedAL = new ArrayList<String>(Arrays.asList(parsed));
+			// Log.i(tag, "parsed: " + parsedAL.toString());
+
 			/* Case 1: One or two times are specified */
 			if (parsedAL.contains("Start Time:")) {
 				int index = parsedAL.indexOf("Start Time:") + 2;
 				startTime = parsedAL.get(index);
-				//Log.i(tag, "index - start: "+index+" parsedAL[index]: "+startTime);
+				// Log.i(tag,
+				// "index - start: "+index+" parsedAL[index]: "+startTime);
 			}
 			if (parsedAL.contains("End Time:")) {
 				int index = parsedAL.indexOf("End Time:") + 2;
 				endTime = parsedAL.get(index);
-				//Log.i(tag, "index - end: "+index+" parsedAL[index]: "+endTime);
+				// Log.i(tag,
+				// "index - end: "+index+" parsedAL[index]: "+endTime);
 			}
-			
+
 			/* Case 2: All day */
 			if (parsedAL.contains("All Day")) {
 				startTime = "All Day";
 				endTime = "All Day";
 			}
-			
+
 			time = startTime + " - " + endTime;
 			return time;
 		}
@@ -790,284 +592,263 @@ public class Events extends Activity {
 					if (myRoom2.length() == 0) {
 						myRoom2 += myRoom.replace(": ", "");
 					} else if (myRoom.length() > 0) {
-						myRoom2 += "; "+myRoom.replace(": ", "");
+						myRoom2 += "; " + myRoom.replace(": ", "");
 					}
-					//Log.i(tag, "myRoom2: "+myRoom2);
+					// Log.i(tag, "myRoom2: "+myRoom2);
 				}
 			}
-			
-			
+
 			return myRoom2;
 
 		}
 
-		/* For those pesky HTML tags in the content:encoded tags */
-		/*public String stripHtml(String html) {
-			if (html.length() == 0 || html == null) {
-				return "";
-			}
-
-			return Html.fromHtml(html).toString();
-		}*/
-
-	}
-		
-		
-		/* Handles DatePicker */
-		public static class MyAlertDialogFragment extends DialogFragment {
-
-			public static MyAlertDialogFragment newInstance() {
-				MyAlertDialogFragment frag = new MyAlertDialogFragment();
-				Bundle args = new Bundle();
-				args.putString("Select Date Range", "daterange");
-				frag.setArguments(args);
-
-
-				return frag;
-			}
-
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				LayoutInflater inflater = getActivity().getLayoutInflater();
-				layout = inflater.inflate(R.layout.event_date_selector, null);
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setView(layout);
-				builder.setTitle("Select Date Range");
-
-				Button b1 = (Button) layout.findViewById(R.id.from_date_picker);
-				Button b2 = (Button) layout.findViewById(R.id.to_date_picker);
-				Button b3 = (Button) layout.findViewById(R.id.submission_buton);
-
-				setUpDateButtons(b1,b2);
-
-				return builder.create();
-			}
-
-			/* Set the Buttons' text to 1-week default */
-			private static void setUpDateButtons(Button from, Button to) {
-
-				/* Set up Calendar instances */
-				final Calendar c = Calendar.getInstance();
-				final Calendar c2 = Calendar.getInstance();
-				c2.add(Calendar.DAY_OF_MONTH, 7);
-				/* Handle edge cases since the Calendar Object doesn't */
-
-
-				int year = c.get(Calendar.YEAR);
-				int year2 = year;
-				int month = c.get(Calendar.MONTH);
-				int month2 = month;
-				int day = c.get(Calendar.DAY_OF_MONTH);
-				int day2 = c2.get(Calendar.DAY_OF_MONTH);			
-
-				/* At the end of a month */
-				if (day > day2) {
-					c2.add(Calendar.MONTH, 1);
-					month2 = c2.get(Calendar.MONTH);
-
-					/* At the end of a year */
-					if (month == 11) {
-						year2++;
-					}
-				}
-
-				String date1 = getDateAsString(year, month, day);
-				String date2 = getDateAsString(year2, month2, day2);
-
-				/* Set Button text to default values */
-				from.setText(date1);
-				to.setText(date2);
-			}
-
-		}
-
-		/* 
-		 * Since I have only two DatePickerFragments to manage, this brute-force method 
-		 * works. Eventually, I'd like to optimize this to only use one DatePickerFragment class.
-		 */
-		public static class FromDatePickerFragment extends DialogFragment
-		implements DatePickerDialog.OnDateSetListener {
-
-			public Button clicked;
-			public Button autoSetDate;
-
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				/* Get the Buttons */
-
-				/* Use the current date as the default date in the picker */
-				final Calendar c = Calendar.getInstance();
-				int year = c.get(Calendar.YEAR);
-				int month = c.get(Calendar.MONTH);
-				int day = c.get(Calendar.DAY_OF_MONTH);
-
-				/* Create a new instance of DatePickerDialog and return it */
-				return new DatePickerDialog(getActivity(), this, year, month, day);
-			}
-
-
-			public void onDateSet(DatePicker view, int year, int month, int day) {
-				/* ValiDATE (haha) */
-				if (validate(year, (1+month), day)) {
-					/* Get new date for Button */
-					String myDate = getDateAsString(year, month, day);
-					clicked = (Button) layout.findViewById(R.id.from_date_picker);
-					clicked.setText(myDate);
-				}
-
-			}
-
-			/* Returns String to set as DatePicker-launch Button text */
-			private String getDateAsString(int year, int month, int day) {
-				String myMonth = Events.monthsArr[month];
-				String myDay = String.valueOf(day);
-				String myYear = String.valueOf(year);
-				return myMonth+" "+myDay+", "+myYear;
-			}
-
-			/* Returns int for use in validation */
-			private int[] getDateAsInts(String date) {
-				String[] splitDate = date.replace(",","").split(" ");
-				DateTimeFormatter format = DateTimeFormat.forPattern("MMMMM");
-				DateTime instance = format.withLocale(Locale.ENGLISH).parseDateTime(splitDate[0]);
-				int month_number = instance.getMonthOfYear();
-				int[] parsedDate = new int[]{month_number, Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[2])};
-				return parsedDate;
-			}
-
-			/* Compare dates for both Buttons */
-			private boolean validate(int selYear, int selMonth, int selDay) {
-				Calendar c = Calendar.getInstance();
-
-				String date2 = (String) ((Button) layout.findViewById(R.id.to_date_picker)).getText();
-
-				int currYear = c.get(Calendar.YEAR);
-				int currMonth = c.get(Calendar.MONTH);
-				int currDay = c.get(Calendar.DAY_OF_MONTH);
-
-				int[] pDate2 = getDateAsInts(date2);
-
-				Log.i("Event", "Selected date: "+selMonth+"/"+selDay+"/"+selYear);
-				Log.i("Event", "End date: "+pDate2[0]+"/"+pDate2[1]+"/"+pDate2[2]);
-				Log.i("Event", "---------------------------------");
-
-				/* Check: date1 is not before today's date */
-				if (selDay < currDay || selMonth < currMonth || selYear < currYear) {
-					Toast.makeText(getActivity(), "Start date cannot predate the current day", Toast.LENGTH_SHORT).show();
-					return false;
-				}
-
-				/* Check: date1 is not after date2 */
-				if (selMonth > pDate2[0] || ((selMonth >= pDate2[0]) && (selDay > pDate2[1])) || selYear > pDate2[2]) {
-					Toast.makeText(getActivity(), "Start date cannot occur after end date", Toast.LENGTH_SHORT).show();
-					return false;
-				}
-
-				return true;
-			}
-
-		}
-
-		public static class ToDatePickerFragment extends DialogFragment
-		implements DatePickerDialog.OnDateSetListener {
-
-			public Button clicked;
-
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				/* Use the current date as the default date in the picker */
-				final Calendar c = Calendar.getInstance();
-				c.setTime(new Date());
-				int year = c.get(Calendar.YEAR);
-				int month = c.get(Calendar.MONTH);
-				int day = c.get(Calendar.DAY_OF_MONTH);
-
-				/* Create a new instance of DatePickerDialog and return it */
-				return new DatePickerDialog(getActivity(), this, year, month, day);
-			}
-
-
-			public void onDateSet(DatePicker view, int year, int month, int day) {
-				if (validate(year, (1+month), day)) {
-					/* Get new date for Button */
-					String myDate = getDateAsString(year, month, day);
-					clicked = (Button) layout.findViewById(R.id.to_date_picker);
-					clicked.setText(myDate);
-				}
-			}
-
-			/* Returns String to set as DatePicker-launch Button text */
-			private String getDateAsString(int year, int month, int day) {
-				String myMonth = Events.monthsArr[month];
-				String myDay = String.valueOf(day);
-				String myYear = String.valueOf(year);
-				return myMonth+" "+myDay+", "+myYear;
-			}
-
-			/* Returns int for use in validation */
-			private int[] getDateAsInts(String date) {
-				String[] splitDate = date.replace(",","").split(" ");
-				DateTimeFormatter format = DateTimeFormat.forPattern("MMMMM");
-				DateTime instance = format.withLocale(Locale.ENGLISH).parseDateTime(splitDate[0]);
-				int month_number = instance.getMonthOfYear();
-				int[] parsedDate = new int[]{month_number, Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[2])};
-				return parsedDate;
-			}
-
-			/* Compare dates for both Buttons */
-			private boolean validate(int selYear, int selMonth, int selDay) {
-				Calendar c = Calendar.getInstance();
-
-				String date1 = (String) ((Button) layout.findViewById(R.id.from_date_picker)).getText();
-
-				/*int currYear = c.get(Calendar.YEAR);
-			int currMonth = c.get(Calendar.MONTH);
-			int currDay = c.get(Calendar.DAY_OF_MONTH);*/
-
-				int[] pDate1 = getDateAsInts(date1);
-
-				//Log.i("Event", "Current date: "+currMonth+"/"+currDay+"/"+currYear);
-				Log.i("Event", "Start date: "+pDate1[0]+"/"+pDate1[1]+"/"+pDate1[2]);
-				Log.i("Event", "Selected date: "+selMonth+"/"+selDay+"/"+selYear);
-				Log.i("Event", "---------------------------------");
-
-				/* Check: date2 is not before date1 */
-				if (selMonth < pDate1[0] || ((selMonth <= pDate1[0]) && (selDay < pDate1[1])) || selYear < pDate1[2]) {
-					Toast.makeText(getActivity(), "End date cannot occur before start date", Toast.LENGTH_SHORT).show();
-					return false;
-				}
-
-				return true;
-
-			}
-		}
 	}
 
-//Log.i("Events - getEvents", "HTML parsing - 1st round");
-		/* Only runs if network is online */
-		/*if (!isNetworkOnline()) { return; }
-		final AQuery aq = new AQuery(Events.this);
-		// final AQuery aq2 = new AQuery(Events.this);
-		// final TextView tv = (TextView) this.findViewById(R.id.tv);
-		String url = "http://calendar.swarthmore.edu/calendar/EventList.aspx?fromdate="+date1+"&todate="+date2+"&display=Week&view=DateTime";
-		Log.i(tag, "URL: "+url);
-		aq.ajax(url, String.class, new AjaxCallback<String>() {
+	/* Handles DatePicker */
+	public static class MyAlertDialogFragment extends DialogFragment {
 
-			@Override
-			public void callback(String url, String html, AjaxStatus status) {
-				 First round HTML parsing - All events 
+		public static MyAlertDialogFragment newInstance() {
+			MyAlertDialogFragment frag = new MyAlertDialogFragment();
+			Bundle args = new Bundle();
+			args.putString("Select Date Range", "daterange");
+			frag.setArguments(args);
 
-				 Debugging 
-				
-				 * Log.i(tag, "URL: "+url); Log.i(tag, "HTML: "+html);
-				 * tv.setMovementMethod(new ScrollingMovementMethod());
-				 * tv.setText(html);
-				 
+			return frag;
+		}
 
-				// Log.i(tag, "MSG: "+status.getMessage());
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			layout = inflater.inflate(R.layout.event_date_selector, null);
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setView(layout);
+			builder.setTitle("Select Date Range");
 
-				 Second round HTML parsing - href tags 
-				getNestedHTML(html);
-				Log.i(tag, "Nested HTML obtained");
+			Button b1 = (Button) layout.findViewById(R.id.from_date_picker);
+			Button b2 = (Button) layout.findViewById(R.id.to_date_picker);
+			Button b3 = (Button) layout.findViewById(R.id.submission_buton);
+
+			setUpDateButtons(b1, b2);
+
+			return builder.create();
+		}
+
+		/* Set the Buttons' text to 1-week default */
+		private static void setUpDateButtons(Button from, Button to) {
+
+			/* Set up Calendar instances */
+			final Calendar c = Calendar.getInstance();
+			final Calendar c2 = Calendar.getInstance();
+			c2.add(Calendar.DAY_OF_MONTH, 7);
+			/* Handle edge cases since the Calendar Object doesn't */
+
+			int year = c.get(Calendar.YEAR);
+			int year2 = year;
+			int month = c.get(Calendar.MONTH);
+			int month2 = month;
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			int day2 = c2.get(Calendar.DAY_OF_MONTH);
+
+			/* At the end of a month */
+			if (day > day2) {
+				c2.add(Calendar.MONTH, 1);
+				month2 = c2.get(Calendar.MONTH);
+
+				/* At the end of a year */
+				if (month == 11) {
+					year2++;
+				}
 			}
-		});*/
+
+			String date1 = getDateAsString(year, month, day);
+			String date2 = getDateAsString(year2, month2, day2);
+
+			/* Set Button text to default values */
+			from.setText(date1);
+			to.setText(date2);
+		}
+
+	}
+
+	/*
+	 * Since I have only two DatePickerFragments to manage, this brute-force
+	 * method works. Eventually, I'd like to optimize this to only use one
+	 * DatePickerFragment class.
+	 */
+	public static class FromDatePickerFragment extends DialogFragment implements
+			DatePickerDialog.OnDateSetListener {
+
+		public Button clicked;
+		public Button autoSetDate;
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			/* Get the Buttons */
+
+			/* Use the current date as the default date in the picker */
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+
+			/* Create a new instance of DatePickerDialog and return it */
+			return new DatePickerDialog(getActivity(), this, year, month, day);
+		}
+
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			/* ValiDATE (haha) */
+			if (validate(year, (1 + month), day)) {
+				/* Get new date for Button */
+				String myDate = getDateAsString(year, month, day);
+				clicked = (Button) layout.findViewById(R.id.from_date_picker);
+				clicked.setText(myDate);
+			}
+
+		}
+
+		/* Returns String to set as DatePicker-launch Button text */
+		private String getDateAsString(int year, int month, int day) {
+			String myMonth = Events.monthsArr[month];
+			String myDay = String.valueOf(day);
+			String myYear = String.valueOf(year);
+			return myMonth + " " + myDay + ", " + myYear;
+		}
+
+		/* Returns int for use in validation */
+		private int[] getDateAsInts(String date) {
+			String[] splitDate = date.replace(",", "").split(" ");
+			DateTimeFormatter format = DateTimeFormat.forPattern("MMMMM");
+			DateTime instance = format.withLocale(Locale.ENGLISH)
+					.parseDateTime(splitDate[0]);
+			int month_number = instance.getMonthOfYear();
+			int[] parsedDate = new int[] { month_number,
+					Integer.parseInt(splitDate[1]),
+					Integer.parseInt(splitDate[2]) };
+			return parsedDate;
+		}
+
+		/* Compare dates for both Buttons */
+		private boolean validate(int selYear, int selMonth, int selDay) {
+			Calendar c = Calendar.getInstance();
+
+			String date2 = (String) ((Button) layout
+					.findViewById(R.id.to_date_picker)).getText();
+
+			int currYear = c.get(Calendar.YEAR);
+			int currMonth = c.get(Calendar.MONTH)+1;
+			int currDay = c.get(Calendar.DAY_OF_MONTH);
+
+			int[] pDate2 = getDateAsInts(date2);
+
+			Log.i("Events", "Current date: " + currMonth + "/" + currDay + "/" + currYear);
+			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/" + selYear);
+			Log.i("Events", "End date: " + pDate2[0] + "/" + pDate2[1] + "/" + pDate2[2]);
+			Log.i("Events", "---------------------------------");
+
+			/* Check: date1 is not before today's date */
+			if (selMonth < currMonth || (selDay < currDay && selMonth < currMonth) || selYear < currYear) {
+				Toast.makeText(getActivity(),
+						"Start date cannot predate the current day",
+						Toast.LENGTH_SHORT).show();
+				return false;
+			}
+
+			/* Check: date1 is not after date2 */
+			if (selMonth > pDate2[0]
+					|| ((selMonth >= pDate2[0]) && (selDay > pDate2[1]))
+					|| selYear > pDate2[2]) {
+				Toast.makeText(getActivity(),
+						"Start date cannot occur after end date",
+						Toast.LENGTH_SHORT).show();
+				return false;
+			}
+
+			return true;
+		}
+
+	}
+
+	public static class ToDatePickerFragment extends DialogFragment implements
+			DatePickerDialog.OnDateSetListener {
+
+		public Button clicked;
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			/* Use the current date as the default date in the picker */
+			final Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+
+			/* Create a new instance of DatePickerDialog and return it */
+			return new DatePickerDialog(getActivity(), this, year, month, day);
+		}
+
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			if (validate(year, (1 + month), day)) {
+				/* Get new date for Button */
+				String myDate = getDateAsString(year, month, day);
+				clicked = (Button) layout.findViewById(R.id.to_date_picker);
+				clicked.setText(myDate);
+			}
+		}
+
+		/* Returns String to set as DatePicker-launch Button text */
+		private String getDateAsString(int year, int month, int day) {
+			String myMonth = Events.monthsArr[month];
+			String myDay = String.valueOf(day);
+			String myYear = String.valueOf(year);
+			return myMonth + " " + myDay + ", " + myYear;
+		}
+
+		/* Returns int for use in validation */
+		private int[] getDateAsInts(String date) {
+			String[] splitDate = date.replace(",", "").split(" ");
+			DateTimeFormatter format = DateTimeFormat.forPattern("MMMMM");
+			DateTime instance = format.withLocale(Locale.ENGLISH)
+					.parseDateTime(splitDate[0]);
+			int month_number = instance.getMonthOfYear();
+			int[] parsedDate = new int[] { month_number,
+					Integer.parseInt(splitDate[1]),
+					Integer.parseInt(splitDate[2]) };
+			return parsedDate;
+		}
+
+		/* Compare dates for both Buttons */
+		private boolean validate(int selYear, int selMonth, int selDay) {
+			Calendar c = Calendar.getInstance();
+
+			String date1 = (String) ((Button) layout
+					.findViewById(R.id.from_date_picker)).getText();
+
+			/*
+			 * int currYear = c.get(Calendar.YEAR); int currMonth =
+			 * c.get(Calendar.MONTH); int currDay =
+			 * c.get(Calendar.DAY_OF_MONTH);
+			 */
+
+			int[] pDate1 = getDateAsInts(date1);
+
+			// Log.i("Event",
+			// "Current date: "+currMonth+"/"+currDay+"/"+currYear);
+			Log.i("Events", "Start date: " + pDate1[0] + "/" + pDate1[1] + "/" + pDate1[2]);
+			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/" + selYear);
+			Log.i("Events", "---------------------------------");
+
+			/* Check: date2 is not before date1 */
+			if (selMonth < pDate1[0]
+					|| ((selMonth <= pDate1[0]) && (selDay < pDate1[1]))
+					|| selYear < pDate1[2]) {
+				Toast.makeText(getActivity(),
+						"End date cannot occur before start date",
+						Toast.LENGTH_SHORT).show();
+				return false;
+			}
+
+			return true;
+
+		}
+	}
+}

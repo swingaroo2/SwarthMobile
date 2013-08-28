@@ -41,6 +41,17 @@
             android:layout_height="match_parent"
             android:background="@color/garnet"
             android:orientation="vertical" >
+
+            <!-- ListView -->
+
+            <ListView
+                android:id="@+id/events_lv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="20.0dp" >
+            </ListView>
         </LinearLayout>
     </LinearLayout>
 
