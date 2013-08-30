@@ -8,8 +8,11 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="17" />
 
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -27,11 +30,17 @@
         </activity>
         <activity
             android:name="lockett_streiff.swarthmobile2.Events"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name="lockett_streiff.swarthmobile2.SwatEventParser"
             android:label="@string/title_activity_swat_event_parser" >
+        </activity>
+        <activity
+            android:name="lockett_streiff.swarthmobile2.TodoList"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_todo_list" >
         </activity>
     </application>
 

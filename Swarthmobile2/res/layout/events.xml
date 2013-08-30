@@ -18,20 +18,39 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <!-- Header -->
-
-        <TextView
-            android:id="@+id/events_list_header"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:gravity="center"
-            android:paddingBottom="5dip"
-            android:paddingTop="5dip"
-            android:text="@string/events_list_header"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal" >
+
+            <!-- Header -->
+
+            <TextView
+                android:id="@+id/events_list_header"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.77"
+                android:background="@color/black"
+                android:gravity="center"
+                android:paddingBottom="5dip"
+                android:paddingTop="5dip"
+                android:text="@string/events_list_header"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- More info button -->
+
+            <!-- <Button
+                android:id="@+id/more_info"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/gray"
+                android:onClick="goToLink"
+                android:text="?"
+                android:textColor="@color/black"
+                android:textStyle="bold" /> -->
+        </LinearLayout>
 
         <!-- Actual window -->
 

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,9 +52,12 @@ public class Events extends Activity {
 	private static final int START_DATE = 0;
 	private static final int END_DATE = 1;
 	private static final String[] monthsArr = { "January", "February", "March",
-			"April", "May", "June", "July", "August", "September", "October",
-			"November", "December" };
+		"April", "May", "June", "July", "August", "September", "October",
+		"November", "December" };
 
+	/* User emails acquisition */
+	static List<String> emails;
+	
 	/* Date range selection Dialog stuff */
 	static View layout;
 
@@ -94,7 +96,6 @@ public class Events extends Activity {
 		eventsAdapter = new EventAdapter(Events.this, eventsList);
 		// eventsAdapter.add(sample);
 		eventsView.setAdapter(eventsAdapter);
-
 	}
 
 	@Override
@@ -387,9 +388,11 @@ public class Events extends Activity {
 		private String strCategory = "";
 		private String strEncoded = "";
 		private String strElement = "";
+		private String strLink = "";
 		private String title;
 		private String time;
 		private String location;
+		private String link;
 
 		@Override
 		public void startDocument() throws SAXException {
@@ -416,6 +419,9 @@ public class Events extends Activity {
 				strElement = "";
 			} else if (localName.equalsIgnoreCase("category")) {
 				state = stateCategory;
+				strElement = "";
+			} else if (localName.equalsIgnoreCase("link")) {
+				state = stateLink;
 				strElement = "";
 			} else if (localName.equalsIgnoreCase("encoded")) {
 				/*
@@ -444,6 +450,10 @@ public class Events extends Activity {
 			if (localName.equalsIgnoreCase("title")) {
 				strTitle += strElement + "\n";
 				title = strElement;
+			} else if (localName.equalsIgnoreCase("link") && strElement.contains("EventList")) {
+				strLink += strElement + "\n";
+				link = strElement;
+				Log.i(tag, "Link: "+link);
 			} else if (localName.equalsIgnoreCase("category")) {
 				/* The last tag in an event */
 				strCategory += strElement + "\n";
@@ -453,7 +463,7 @@ public class Events extends Activity {
 				 * time); Log.i(tag, "LOCATION: " + location); Log.i(tag,
 				 * "-------------------------------");
 				 */
-				final Event event = new Event(title, time, strElement, location);
+				final Event event = new Event(title, time, strElement, location, link);
 				runOnUiThread(new Runnable() {
 
 					@Override
@@ -465,11 +475,13 @@ public class Events extends Activity {
 
 						}
 
-						/*Log.i(tag, " Title: " + event.getTitle());
-						Log.i(tag, " Time: " + event.getTime());
-						Log.i(tag, " Date: " + event.getDate());
-						Log.i(tag, " Location: " + event.getLocation());
-						Log.i(tag, "-------------------------------");*/
+						/*
+						 * Log.i(tag, " Title: " + event.getTitle()); Log.i(tag,
+						 * " Time: " + event.getTime()); Log.i(tag, " Date: " +
+						 * event.getDate()); Log.i(tag, " Location: " +
+						 * event.getLocation()); Log.i(tag,
+						 * "-------------------------------");
+						 */
 						Events.eventsList.add(event);
 						eventsAdapter.notifyDataSetChanged();
 
@@ -499,7 +511,7 @@ public class Events extends Activity {
 			String strCharacters = new String(ch, start, length);
 			if (state == stateTitle
 					&& !strCharacters
-							.contains("Swarthmore College Events Calendar")) {
+					.contains("Swarthmore College Events Calendar")) {
 				strElement += strCharacters;
 				streamTitle += strElement + "\n";
 			} else if (state == stateCategory || state == stateLink) {
@@ -651,9 +663,7 @@ public class Events extends Activity {
 
 			/* At the end of a month */
 			if (day > day2) {
-				c2.add(Calendar.MONTH, 1);
-				month2 = c2.get(Calendar.MONTH);
-
+				month2++;
 				/* At the end of a year */
 				if (month == 11) {
 					year2++;
@@ -676,7 +686,7 @@ public class Events extends Activity {
 	 * DatePickerFragment class.
 	 */
 	public static class FromDatePickerFragment extends DialogFragment implements
-			DatePickerDialog.OnDateSetListener {
+	DatePickerDialog.OnDateSetListener {
 
 		public Button clicked;
 		public Button autoSetDate;
@@ -735,18 +745,23 @@ public class Events extends Activity {
 					.findViewById(R.id.to_date_picker)).getText();
 
 			int currYear = c.get(Calendar.YEAR);
-			int currMonth = c.get(Calendar.MONTH)+1;
+			int currMonth = c.get(Calendar.MONTH) + 1;
 			int currDay = c.get(Calendar.DAY_OF_MONTH);
 
 			int[] pDate2 = getDateAsInts(date2);
 
-			Log.i("Events", "Current date: " + currMonth + "/" + currDay + "/" + currYear);
-			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/" + selYear);
-			Log.i("Events", "End date: " + pDate2[0] + "/" + pDate2[1] + "/" + pDate2[2]);
+			Log.i("Events", "Current date: " + currMonth + "/" + currDay + "/"
+					+ currYear);
+			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"
+					+ selYear);
+			Log.i("Events", "End date: " + pDate2[0] + "/" + pDate2[1] + "/"
+					+ pDate2[2]);
 			Log.i("Events", "---------------------------------");
 
 			/* Check: date1 is not before today's date */
-			if (selMonth < currMonth || (selDay < currDay && selMonth < currMonth) || selYear < currYear) {
+			if (selMonth < currMonth
+					|| (selDay < currDay && selMonth < currMonth)
+					|| selYear < currYear) {
 				Toast.makeText(getActivity(),
 						"Start date cannot predate the current day",
 						Toast.LENGTH_SHORT).show();
@@ -769,7 +784,7 @@ public class Events extends Activity {
 	}
 
 	public static class ToDatePickerFragment extends DialogFragment implements
-			DatePickerDialog.OnDateSetListener {
+	DatePickerDialog.OnDateSetListener {
 
 		public Button clicked;
 
@@ -783,6 +798,7 @@ public class Events extends Activity {
 			int day = c.get(Calendar.DAY_OF_MONTH);
 
 			/* Create a new instance of DatePickerDialog and return it */
+			Log.i(tag, "month: " + month);
 			return new DatePickerDialog(getActivity(), this, year, month, day);
 		}
 
@@ -833,8 +849,10 @@ public class Events extends Activity {
 
 			// Log.i("Event",
 			// "Current date: "+currMonth+"/"+currDay+"/"+currYear);
-			Log.i("Events", "Start date: " + pDate1[0] + "/" + pDate1[1] + "/" + pDate1[2]);
-			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/" + selYear);
+			Log.i("Events", "Start date: " + pDate1[0] + "/" + pDate1[1] + "/"
+					+ pDate1[2]);
+			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"
+					+ selYear);
 			Log.i("Events", "---------------------------------");
 
 			/* Check: date2 is not before date1 */
@@ -851,4 +869,5 @@ public class Events extends Activity {
 
 		}
 	}
+
 }

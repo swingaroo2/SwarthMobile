@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <!-- Event name bar -->
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:background="@color/black"
+            android:paddingLeft="5dp"
+            android:text="@string/event_item_title"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Container for event description box and 'more detail' button -->
+
+        <LinearLayout
+            android:id="@+id/list_item_body_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/linen"
+            android:orientation="horizontal" >
+
+            <!-- Event 'less-detail' box -->
+
+            <LinearLayout
+                android:id="@+id/event_description"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.24"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <!-- Time -->
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_time"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- Location -->
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_location"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+			
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" 
+                android:orientation="horizontal">
+                
+            <!-- Add to Calendar Button (gotta fill the dead space) -->
+
+            <Button
+                android:id="@+id/calendar_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/add_to_calendar" />
+            
+            <Button 
+                android:id="@+id/more_info"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/more_info"
+                />
+            
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Additional options shown by touching the list item -->
+
+    <LinearLayout
+        android:id="@+id/more_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:gravity="right"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+</LinearLayout>
