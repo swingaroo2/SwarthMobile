@@ -441,7 +441,6 @@ public class Events extends Activity {
 		@Override
 		public void endElement(String uri, String localName, String qName)
 				throws SAXException {
-			// TODO Auto-generated method stub
 
 			if (strElement.equals("")) {
 				return;
@@ -453,9 +452,10 @@ public class Events extends Activity {
 			} else if (localName.equalsIgnoreCase("link") && strElement.contains("EventList")) {
 				strLink += strElement + "\n";
 				link = strElement;
-				Log.i(tag, "Link: "+link);
+				//Log.i(tag, "Link: "+link);
 			} else if (localName.equalsIgnoreCase("category")) {
 				/* The last tag in an event */
+				Log.i(tag, "strElement: "+strElement);
 				strCategory += strElement + "\n";
 				// Log.i(tag, "TITLE: " + title);
 				/*

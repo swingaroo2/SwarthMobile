@@ -1,6 +1,7 @@
 package lockett_streiff.swarthmobile2;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -35,7 +36,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
 	public EventAdapter(Activity context, List<Event> events) {
 		super(context, R.layout.event_list_item);
-		this.context = context;
+		EventAdapter.context = context;
 		this.events = events;
 		this.inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,17 +56,16 @@ public class EventAdapter extends ArrayAdapter<Event> {
 	}
 
 	@Override
-	public View getView(final int position, View convertView,
-			final ViewGroup parent) {
+	public View getView(final int position, View convertView, final ViewGroup parent) {
 		// Log.i(tag, "getView");
 		View vi = convertView;
-		Button button;
+		Button addToCal;
 		Button moreInfo;
 		final Event event = getItem(position);
 
 		if (convertView == null) {
 			vi = inflater.inflate(R.layout.event_list_item, null);
-			button = (Button) vi.findViewById(R.id.calendar_button);
+			addToCal = (Button) vi.findViewById(R.id.calendar_button);
 			moreInfo = (Button) vi.findViewById(R.id.more_info);
 			/* Need to change String resources to match Event object fields */
 			TextView name = (TextView) vi.findViewById(R.id.name);
@@ -78,7 +78,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 		} else {
 			vi = convertView;
 			LinearLayout vi2 = (LinearLayout) vi;
-			button = (Button) vi2.findViewById(R.id.calendar_button);
+			addToCal = (Button) vi2.findViewById(R.id.calendar_button);
 			moreInfo = (Button) vi2.findViewById(R.id.more_info);
 			TextView name = (TextView) vi2.findViewById(R.id.name);
 			TextView time = (TextView) vi2.findViewById(R.id.time);
@@ -99,7 +99,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				
 			}});
 		
-		button.setOnClickListener(new OnClickListener() {
+		addToCal.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -110,10 +110,9 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				String evTitle = event.getTitle();
 				String evLocation = event.getLocation();
 				int[] dates = event.getDateAsMillis();
-				// Log.i(tag,"dates: "+Arrays.toString(dates));
+				Log.i(tag,"dates["+dates.length+"]: "+Arrays.toString(dates));
 				long time1;
 				long time2;
-
 				Calendar c1 = new GregorianCalendar(dates[2], dates[0] - 1,
 						dates[1]);
 				Calendar c2 = new GregorianCalendar(dates[2], dates[0] - 1,
@@ -121,7 +120,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				if (dates.length > 3) {
 					// Log.i(tag,
 					// "New calendar at date: "+(dates[3]-1)+"/"+dates[4]+"/"+dates[5]);
-					c2 = new GregorianCalendar(dates[5], dates[3], dates[4]);
+					c2 = new GregorianCalendar(dates[5], dates[3]-1, dates[4]);
 				}
 				int[] times = event.getTimeAsMillis();
 				c1.setTimeZone(TimeZone.getTimeZone("America/New_York"));
@@ -129,7 +128,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				c1.set(Calendar.MINUTE, times[1]);
 				c1.set(Calendar.SECOND, 0);
 				c1.set(Calendar.MILLISECOND, 0);
-				Log.i(tag, "dates.length: " + dates.length);
+				//Log.i(tag, "dates.length: " + dates.length);
 				c2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 				c2.set(Calendar.HOUR, times[2]);
 				c2.set(Calendar.MINUTE, times[3]);
@@ -141,10 +140,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				Log.i(tag, "What: " + evTitle);
 				Log.i(tag, "Where: " + evLocation);
 				if (!event.getTime().contains("All Day")) {
-					if (format.format(c1.getTime()) != format.format(c2
-							.getTime())) {
-						Log.i(tag, "When: " + format.format(c1.getTime())
-								+ " - " + format.format(c2.getTime()));
+					if (format.format(c1.getTime()) != format.format(c2.getTime())) {
+						Log.i(tag, "When: " + format.format(c1.getTime())+ " - " + format.format(c2.getTime()));
 					} else {
 						Log.i(tag, "When: " + format.format(c1.getTime()));
 					}
