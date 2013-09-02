@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     android:layout_width="fill_parent"
@@ -11,7 +9,8 @@
     android:paddingRight="15dip"
     android:ellipsize="marquee"
     android:textStyle="bold"
-    android:textColor="#FFFFFF"
-    android:background="@drawable/concert1"
-    
+    android:textColor="@color/white"
+    android:background="@drawable/concert1"  
 />
+
+    

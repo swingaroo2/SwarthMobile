@@ -33,6 +33,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -88,13 +89,12 @@ public class Events extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.events);
 
-		/* Set up ListView with sample test event */
-		// Event sample = new Event("Orchestra concert", "7:00 PM - 10:00 PM",
-		// "November 17, 2013", "Lang Concert Hall");
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		eventsList = new ArrayList<Event>();
 		eventsView = (ListView) this.findViewById(R.id.events_lv);
 		eventsAdapter = new EventAdapter(Events.this, eventsList);
-		// eventsAdapter.add(sample);
+		
 		eventsView.setAdapter(eventsAdapter);
 	}
 
@@ -105,16 +105,21 @@ public class Events extends Activity {
 		return true;
 	}
 
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
+		/* Handle item selection */
 		switch (item.getItemId()) {
 		case R.id.action_get_date_range:
-			// Toast.makeText(this, "Open Dialog", Toast.LENGTH_SHORT).show();
 			showDialog();
+			break;
+		case android.R.id.home:
+			onBackPressed();
+			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+		return false;
 	}
 
 	/*
@@ -290,8 +295,7 @@ public class Events extends Activity {
 			return false;
 		}
 		if (!status) {
-			Toast.makeText(Events.this, "Could not find network connection",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(Events.this, "No Internet Connection",Toast.LENGTH_SHORT).show();
 		}
 		return status;
 	}
@@ -314,8 +318,7 @@ public class Events extends Activity {
 			return;
 		}
 		String URL = "http://calendar.swarthmore.edu/calendar/RSSSyndicator.aspx?category=&location=&type=N&starting="
-				+ date1 + "&ending=" + date2 + "&binary=Y&keywords=&ics=Y";
-		// Log.i(tag, "URL: " + URL);
+					 + date1 + "&ending=" + date2 + "&binary=Y&keywords=&ics=Y";
 
 		new RetreiveFeedTask().execute(URL);
 
@@ -651,7 +654,7 @@ public class Events extends Activity {
 			/* Set up Calendar instances */
 			final Calendar c = Calendar.getInstance();
 			final Calendar c2 = Calendar.getInstance();
-			c2.add(Calendar.DAY_OF_MONTH, 7);
+			c2.add(Calendar.DAY_OF_MONTH, 6);
 			/* Handle edge cases since the Calendar Object doesn't */
 
 			int year = c.get(Calendar.YEAR);

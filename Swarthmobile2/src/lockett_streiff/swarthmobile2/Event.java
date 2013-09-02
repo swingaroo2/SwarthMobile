@@ -23,6 +23,12 @@ public class Event {
 	
 	public Event() {
 		super();
+		this.title = "";
+		this.time = "";
+		this.date = "";
+		this.link = "";
+		this.allDay = false;
+		this.location = "";
 	}
 
 	public Event(String title, String time, String date, String location, String link) {
@@ -57,6 +63,7 @@ public class Event {
 	}
 
 	public int[] getTimeAsMillis() {
+		/* Sample "input" is "7:00 PM - 10:00 PM" */
 		try {
 			String[] time1;
 			String[] time2;

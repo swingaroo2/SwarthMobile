@@ -1,19 +1,19 @@
 package lockett_streiff.swarthmobile2;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.TimeZone;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Reminders;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,7 +22,7 @@ public class CalendarClient {
 	private static final String tag = "HelloAndroidCalendar";
 	private List<String> calendars;
 	private Activity context;
-	
+
 	public CalendarClient(Activity context) {
 		this.context = context;
 		this.calendars = getCalendars();
@@ -30,7 +30,7 @@ public class CalendarClient {
 		// newCalendar("Swarthmobile","zachls17@gmail.com");
 		Log.i(tag, "Calendar ID: " + getCalendarId("Swarthmore Campus Events"));
 	}
-	
+
 	private ArrayList<String> getCalendars() {
 		LinkedHashSet<String> lhs = new LinkedHashSet<String>();
 		String[] projection = new String[] { Calendars._ID, Calendars.NAME,
@@ -86,7 +86,7 @@ public class CalendarClient {
 	}
 
 	public void newEvent(Event event, String title, String location, long start, long end, String myCal, String email) {
-		
+
 		Log.i(tag, "calendars: " + this.calendars.toString());
 		if (!calendars.contains(myCal)) {
 			newCalendar(myCal, email);
@@ -97,27 +97,37 @@ public class CalendarClient {
 			// no calendar account; react meaningfully
 			return;
 		}
-		
-		 //Check if event is all day 
+
+		//Check if event is all day 
 		int allDay = (event.getTime().contains("All Day"))? 1 : 0;
 		Log.i(tag, "allDay: "+allDay);
-		
+
 		ContentValues values = new ContentValues();
 		/* Under the hood stuff */ 
 		values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/New_York");
 		values.put(Events.CALENDAR_ID, calId);
-		
+
 		//values.put(Events.RRULE,"FREQ=DAILY;COUNT=20;BYDAY=MO,TU,WE,TH,FR;WKST=MO");
-		
+
 		/* Displayed event content (except for date handled with the cal variable) */ 
 		values.put(Events.TITLE, title);
 		values.put(Events.EVENT_LOCATION, location);
 		values.put(Events.DTSTART, start);
 		values.put(Events.DTEND, end);
 		values.put(Events.ALL_DAY, allDay);
-		Uri uri = this.context.getContentResolver().insert(Events.CONTENT_URI, values);
+
+		ContentResolver cr = this.context.getContentResolver();
+		Uri uri = cr.insert(Events.CONTENT_URI, values);
 		Toast.makeText(this.context, "Added to calendar: "+title, Toast.LENGTH_SHORT).show();
 		long eventId = Long.valueOf(uri.getLastPathSegment());
+
+
+		ContentValues reminders = new ContentValues();
+		reminders.put(Reminders.EVENT_ID, eventId);
+		reminders.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+		reminders.put(Reminders.MINUTES, 30);
+		Uri uri2 = cr.insert(Reminders.CONTENT_URI, reminders);
+
 	}
 
 

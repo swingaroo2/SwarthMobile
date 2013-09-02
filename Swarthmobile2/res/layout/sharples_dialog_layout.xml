@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/black"
     android:ellipsize="marquee"
@@ -10,5 +10,4 @@
     android:paddingLeft="14dip"
     android:paddingRight="15dip"
     android:textAppearance="?android:attr/textAppearanceLargeInverse"
-    android:textColor="@color/white"
-    android:textStyle="bold" />
+    android:textColor="@color/white" />
