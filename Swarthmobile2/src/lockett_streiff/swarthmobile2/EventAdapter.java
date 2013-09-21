@@ -73,6 +73,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 			TextView location = (TextView) vi.findViewById(R.id.location);
 			// Log.i(tag,String.format("Get view %d", position));
 			name.setText(event.getTitle());
+			//Log.i(tag, "Time: "+event.getTime());
 			time.setText(event.getTime());
 			location.setText(event.getLocation());
 		} else {
@@ -85,11 +86,11 @@ public class EventAdapter extends ArrayAdapter<Event> {
 			TextView location = (TextView) vi2.findViewById(R.id.location);
 			// Log.i(tag,String.format("Get view %d", position));
 			name.setText(event.getTitle());
+			//Log.i(tag, "Time: "+event.getTime());
 			time.setText(event.getTime());
 			location.setText(event.getLocation());
 
 		}
-
 		moreInfo.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -123,6 +124,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 					c2 = new GregorianCalendar(dates[5], dates[3]-1, dates[4]);
 				}
 				int[] times = event.getTimeAsMillis();
+				Log.i(tag, "Time: "+Arrays.toString(times));
 				c1.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 				c1.set(Calendar.HOUR, times[0]);
 				c1.set(Calendar.MINUTE, times[1]);

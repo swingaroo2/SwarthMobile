@@ -1,8 +1,7 @@
 package lockett_streiff.swarthmobile2;
 
+
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class MainMenu extends Activity {
 
 	private static final String tag = "MainMenu";
@@ -64,6 +64,7 @@ public class MainMenu extends Activity {
 	private static final int TRANSPORTATION = 3;
 	private static final int CONCERTS = 4;
 	private static final int HOURS = 5;
+	private static final int ABOUT = 6;
 
 	/* Copied from v1.0 */
 	String train;
@@ -99,7 +100,7 @@ public class MainMenu extends Activity {
 		/* Set up ListView */
 		lv = (ListView) this.findViewById(R.id.listview);
 		applets = new String[] { "Campus Events", "ToDo List", "Sharples Menu",
-				"Van and Train Schedules", "Concerts in Philly", "Hours" };
+				"Van and Train Schedules", "Concerts in Philly", "Hours", "About the Developers" };
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, applets);
 		lv.setAdapter(adapter);
@@ -133,6 +134,9 @@ public class MainMenu extends Activity {
 					break;
 				case HOURS:
 					hoursOnClick();
+					break;
+				case ABOUT:
+					aboutOnClick();
 					break;
 				}
 
@@ -169,7 +173,7 @@ public class MainMenu extends Activity {
 	}
 
 	private void todoOnClick() {
-		startActivity(new Intent(this, TodoList.class));
+		startActivity(new Intent(this, ActivityTodoList.class));
 	}
 	
 	public void sharplesOnClick() {
@@ -211,6 +215,10 @@ public class MainMenu extends Activity {
 		}
 	}
 
+	public void aboutOnClick() {
+		startActivity(new Intent(this, About.class));
+	}
+	
 	private class GetWebData extends
 	AsyncTask<ArrayList<String>, String, String> {
 
@@ -448,10 +456,7 @@ public class MainMenu extends Activity {
 						AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainMenu.this);
 						alertDialog2
 						.setTitle("Please select a shuttle time");
-						// alertDialog2.setMessage("Breakfast: " +
-						// "\n\n" + breakfast + "\n\n\n" + "Lunch: " +
-						// "\n\n" + lunch + "\n\n\n" + "Dinner: " +
-						// "\n\n" + dinner);
+						// alertDialog2.setMessage("Breakfast: " +"\n\n" + breakfast + "\n\n\n" + "Lunch: " + "\n\n" + lunch + "\n\n\n" + "Dinner: " + "\n\n" + dinner);
 
 						alertDialog2.setAdapter(timesAdapter,
 								new DialogInterface.OnClickListener() {
@@ -655,22 +660,33 @@ public class MainMenu extends Activity {
 
 								if (Class.equals("dining-menu")) {
 									// Log.i(MainMenu.tag,"count is: " + count);
-
+									SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+									Date d = new Date();
+									String day = sdf.format(d).trim();
+									Log.i(MainMenu.tag, day);
 									if (count == 0) {
-										breakfast = tag.toPlainTextString();
-										menu.add(breakfast.replaceAll("\n",
-												"\n\n"));
+										if (!day.contains("Sunday")) {
+											breakfast = "BREAKFAST:" + "\n" + tag.toPlainTextString();
+											menu.add(breakfast.replaceAll("\n","\n\n"));
+										} else {
+											breakfast = "CONTINENTAL BREAKFAST:" + "\n" + tag.toPlainTextString();
+											menu.add(breakfast.replaceAll("\n","\n\n"));
+										}
 									}
 									if (count == 1) {
-										lunch = tag.toPlainTextString();
-										menu.add(lunch.replaceAll("\n", "\n\n"));
+										
+										if (!day.contains("Sunday") && !day.contains("Saturday")) {
+											lunch = "LUNCH:" + "\n" + tag.toPlainTextString();
+											menu.add(lunch.replaceAll("\n","\n\n"));
+										} else {
+											lunch = "BRUNCH:" + "\n" + tag.toPlainTextString();
+											menu.add(lunch.replaceAll("\n","\n\n"));
+										}
 
 									}
 									if (count == 2) {
-										dinner = tag.toPlainTextString();
-										// Log.i(MainMenu.tag,dinner);
-										menu.add(dinner
-												.replaceAll("\n", "\n\n"));
+										dinner = "DINNER:" + "\n" + tag.toPlainTextString();
+										menu.add(dinner.replaceAll("\n", "\n\n"));
 									}
 									count++;
 								}

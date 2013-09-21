@@ -458,7 +458,7 @@ public class Events extends Activity {
 				//Log.i(tag, "Link: "+link);
 			} else if (localName.equalsIgnoreCase("category")) {
 				/* The last tag in an event */
-				Log.i(tag, "strElement: "+strElement);
+				//Log.i(tag, "strElement: "+strElement);
 				strCategory += strElement + "\n";
 				// Log.i(tag, "TITLE: " + title);
 				/*
@@ -553,13 +553,13 @@ public class Events extends Activity {
 			/* Case 1: One or two times are specified */
 			if (parsedAL.contains("Start Time:")) {
 				int index = parsedAL.indexOf("Start Time:") + 2;
-				startTime = parsedAL.get(index);
+				startTime = parsedAL.get(index).trim();
 				// Log.i(tag,
 				// "index - start: "+index+" parsedAL[index]: "+startTime);
 			}
 			if (parsedAL.contains("End Time:")) {
 				int index = parsedAL.indexOf("End Time:") + 2;
-				endTime = parsedAL.get(index);
+				endTime = parsedAL.get(index).trim();
 				// Log.i(tag,
 				// "index - end: "+index+" parsedAL[index]: "+endTime);
 			}
@@ -568,8 +568,28 @@ public class Events extends Activity {
 			if (parsedAL.contains("All Day")) {
 				startTime = "All Day";
 				endTime = "All Day";
+				Log.i(tag, "All Day");
 			}
 
+			/* More unspecified time handling */
+			if (startTime.equals("")) {
+				startTime = "12:00 AM*";
+			}
+			else if (startTime.contains("Midnight")) {
+				startTime = startTime.replace("*", "");
+			}
+			
+			if (endTime.equals("")) {
+				endTime = "11:59 PM*";
+			}
+			else if (endTime.contains("Midnight")) {
+				endTime = endTime.replace("*", "");
+			}
+			
+			
+			/*Log.i(tag, "Start Time: "+startTime);
+			Log.i(tag, "End Time: "+endTime);
+			Log.i(tag, "----------------------------------------");*/
 			time = startTime + " - " + endTime;
 			return time;
 		}

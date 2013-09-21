@@ -34,7 +34,7 @@ public class Event {
 	public Event(String title, String time, String date, String location, String link) {
 		super();
 		this.title = title;
-		this.time = time;
+		this.time = time.replace("Midnight -", "12:00 AM -").replace("- Midnight", "- 11:59 PM");
 		this.date = date;
 		this.link = link;
 		this.allDay = time.contains("All Day");
@@ -68,7 +68,8 @@ public class Event {
 			String[] time1;
 			String[] time2;
 			if (!this.time.contains("All Day")) {
-				String[] pTimes = this.time.replace(" ", "").split("-");
+				String[] pTimes = this.time.replace("*","").replace(" ", "").split("-");
+				Log.i("Event", "pTimes: "+Arrays.toString(pTimes));
 				time1 = convertTo24HoursFormat(pTimes[0]).split(":");
 				time2 = convertTo24HoursFormat(pTimes[1]).split(":");
 			} else {
