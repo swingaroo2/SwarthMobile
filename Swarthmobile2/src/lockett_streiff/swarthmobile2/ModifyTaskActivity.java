@@ -2,7 +2,6 @@ package lockett_streiff.swarthmobile2;
 
 import java.util.Calendar;
 
-import lockett_streiff.swarthmobile2.R;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-
 
 // This activity is used for 2 purposes: Creating new Task and Editing existing Task
 // Every time it's loaded, the program should check whether the Task object in the bundle is exist

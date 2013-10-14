@@ -3,13 +3,11 @@ package lockett_streiff.swarthmobile2;
 import java.util.Calendar;
 import java.util.Locale;
 
-import lockett_streiff.swarthmobile2.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 
 public class ViewTaskDetailActivity extends GeneralActivity {
 

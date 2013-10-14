@@ -49,27 +49,19 @@
             android:label="@string/title_activity_todo_list" >
         </activity>
         <activity
-            android:name="lockett_streiff.swarthmobile2.ViewAllGroupsActivity"
-            android:label="@string/activity_view_all_groups_String_title" >
-        </activity>
-        <activity
             android:name="lockett_streiff.swarthmobile2.ViewAllTasksActivity"
             android:label="@string/activity_view_all_tasks_String_title" >
-        </activity>
-        <activity
-            android:name="lockett_streiff.swarthmobile2.ModifyGroupActivity"
-            android:label="@string/activity_modify_group_String_title" >
         </activity>
         <activity
             android:name="lockett_streiff.swarthmobile2.ViewTaskDetailActivity"
             android:label="@string/activity_view_task_detail_String_title" >
         </activity>
         <activity
-            android:name="lockett_streiff.swarthmobile2.ModifyTaskActivitykActivity"
+            android:name="lockett_streiff.swarthmobile2.ModifyTaskActivity"
             android:label="@string/activity_modify_task_String_title" >
         </activity>
         <activity
-            android:name="lockett_streiff.swarthmobile2.SettingActivitygActivity"
+            android:name="lockett_streiff.swarthmobile2.SettingActivity"
             android:label="@string/title_activity_setting" >
         </activity>
     </application>

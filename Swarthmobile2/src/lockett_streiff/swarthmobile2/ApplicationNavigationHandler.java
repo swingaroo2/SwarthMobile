@@ -1,17 +1,11 @@
 package lockett_streiff.swarthmobile2;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 
 
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Note;
 
 // A class consists of static functions that help the application navigation between activity
 // The idea of the class is that many events can call to the same activity,

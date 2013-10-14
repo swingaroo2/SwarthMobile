@@ -3,7 +3,6 @@ package lockett_streiff.swarthmobile2;
 import java.util.ArrayList;
 import java.util.List;
 
-import lockett_streiff.swarthmobile2.R;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
 
 public class ViewAllTasksActivity extends GeneralActivity {
 
@@ -71,8 +69,7 @@ public class ViewAllTasksActivity extends GeneralActivity {
 			int[] to = new int[]{R.id.activity_view_all_groups_listview_all_groups_layout_textview_group_title};
 			// Init the adapter for list view
 			// TODO replace the deprecated SimpleCursorAdapter with an alternative one
-			allTasksListViewAdapter = new SimpleCursorAdapter(this,
-					R.layout.activity_view_all_groups_listview_all_groups_layout, allTasksCursor, from, to);
+			allTasksListViewAdapter = new SimpleCursorAdapter(this,R.layout.activity_view_all_groups_listview_all_groups_layout, allTasksCursor, from, to);
 			// Set the adapter for the list view
 			this.allTasksListView.setAdapter(allTasksListViewAdapter);
 		}
@@ -97,46 +94,9 @@ public class ViewAllTasksActivity extends GeneralActivity {
 		selectedTask.setNote(allTasksCursor.getString(allTasksCursor.getColumnIndex(DatabaseAdapter.TASK_TABLE_COLUMN_NOTE)));
 		// set priority level
 		selectedTask.setPriorityLevel(allTasksCursor.getInt(allTasksCursor.getColumnIndex(DatabaseAdapter.TASK_TABLE_COLUMN_PRIORITY)));
-		// set completion status
-		selectedTask.setCompletionStatus(allTasksCursor.getInt(allTasksCursor.getColumnIndex(DatabaseAdapter.TASK_TABLE_COLUMN_COMPLETION_STATUS)));
-		// set the group
-		selectedTask.setGroup(this.getGroupByTask(allTasksCursor.getString(allTasksCursor.getColumnIndex(DatabaseAdapter.TASK_TABLE_COLUMN_GROUP))));
-		// set the collaborators
-		selectedTask.setCollaborators(this.getCollaboratorsListByTaskId(allTasksCursor.getString(allTasksCursor.getColumnIndex(DatabaseAdapter.TASK_TABLE_COLUMN_ID))));
 		
 		// start the activity
 		ApplicationNavigationHandler.viewTaskDetail(this, selectedTask);
-	}
-	
-	// Get the collaborators list of the input task ID
-	private List<String> getCollaboratorsListByTaskId(String taskId){
-		List<String> collaboratorsList = new ArrayList<String>();
-		
-		// retrieve all collaborators of this task id
-		Cursor collaboratorsCursor = databaseAdapter.getCollaboratorsByTaskId(taskId);
-		startManagingCursor(collaboratorsCursor);
-		// iterate through the cursor and add email to the list
-		collaboratorsCursor.moveToFirst();
-		while(!collaboratorsCursor.isAfterLast()){
-			String currentCollaboratorEmail = collaboratorsCursor.getString(collaboratorsCursor.getColumnIndex(DatabaseAdapter.COLLABORATOR_TABLE_COLUMN_EMAIL));
-			collaboratorsList.add(currentCollaboratorEmail);
-			collaboratorsCursor.moveToNext();
-		}
-		
-		return collaboratorsList;
-	}
-	
-	// Get the group by the input Id
-	private Group getGroupByTask(String groupId){
-		Group group = new Group();
-		
-		// query from database
-		Cursor groupCursor = this.databaseAdapter.getGroupById(groupId);
-		groupCursor.moveToFirst();
-		group.setId(groupCursor.getString(groupCursor.getColumnIndex(DatabaseAdapter.GROUP_TABLE_COLUMN_ID)));
-		group.setTitle(groupCursor.getString(groupCursor.getColumnIndex(DatabaseAdapter.GROUP_TABLE_COULMN_TITLE)));
-		
-		return group;
 	}
 
 	@Override

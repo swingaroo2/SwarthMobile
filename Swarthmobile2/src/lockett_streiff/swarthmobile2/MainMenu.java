@@ -173,7 +173,7 @@ public class MainMenu extends Activity {
 	}
 
 	private void todoOnClick() {
-		startActivity(new Intent(this, ActivityTodoList.class));
+		startActivity(new Intent(this, ViewAllTasksActivity.class));
 	}
 	
 	public void sharplesOnClick() {

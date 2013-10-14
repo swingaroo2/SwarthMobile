@@ -21,7 +21,7 @@ public class Group implements Serializable {
 	private List<Task> tasksList;
 	
 	
-	// COMPUTER GENERATED STUFFS
+	// COMPUTER GENERATED STUFFS! YAY!
 	
 	public Group(){
 		

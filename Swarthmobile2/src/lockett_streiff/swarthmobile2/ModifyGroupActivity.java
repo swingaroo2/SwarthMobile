@@ -1,11 +1,9 @@
 package lockett_streiff.swarthmobile2;
 
-import lockett_streiff.swarthmobile2.R;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-
 
 // This activity is used for 2 purposes: Creating new Group and Editing existing Group
 // Every time it's loaded, the program should check whether the Group object in the bundle is exist
