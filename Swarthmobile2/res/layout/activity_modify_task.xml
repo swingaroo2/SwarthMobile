@@ -91,7 +91,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </TableRow>
 
-        <View
+        <!-- <View
             android:layout_height="2dip"
             android:background="#FF909090" />
 
@@ -179,7 +179,7 @@
                 android:gravity="right"
                 android:padding="3dip"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-        </TableRow>
-    </TableLayout>
+        </TableRow> -->
+    </TableLayout> 
 
 </ScrollView>

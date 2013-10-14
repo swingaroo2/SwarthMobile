@@ -231,8 +231,8 @@ public class DatabaseAdapter {
 		updateValues.put(TASK_TABLE_COLUMN_NOTE, task.getNote());
 		updateValues.put(TASK_TABLE_COLUMN_DUE_DATE, task.getDueDate().getTimeInMillis());
 		updateValues.put(TASK_TABLE_COLUMN_PRIORITY, task.getPriorityLevel());
-		updateValues.put(TASK_TABLE_COLUMN_GROUP, task.getGroup().getId());
-		updateValues.put(TASK_TABLE_COLUMN_COMPLETION_STATUS, task.getCompletionStatus());
+		//updateValues.put(TASK_TABLE_COLUMN_GROUP, task.getGroup().getId());
+		//updateValues.put(TASK_TABLE_COLUMN_COMPLETION_STATUS, task.getCompletionStatus());
 		sqLiteDatabase.update(TASK_TABLE_NAME, updateValues, TASK_TABLE_COLUMN_ID + " = '" + task.getId() + "'", null);
 		
 		// Update Collaborator table
