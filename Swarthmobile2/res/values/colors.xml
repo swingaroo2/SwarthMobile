@@ -11,4 +11,6 @@
     <color name="blue">#0f0</color>
 	<color name="rosybrown">#ffb8a78c</color>
 	<color name="slategray">#ff6d7b8d</color>
+	<color name="pale_yellow">#ffec8b</color>
+	<color name="dark_blue">#000080</color>
 </resources>

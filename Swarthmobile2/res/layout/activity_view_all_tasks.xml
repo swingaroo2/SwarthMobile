@@ -2,16 +2,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/general_background"
+    android:background="@color/rosybrown"
     tools:context=".MainActivity" >
 
-    <ListView
-        android:id="@+id/activity_view_all_tasks_Listview_all_tasks"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:scrollbarStyle="outsideOverlay" >
-    </ListView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/linen"
+        android:orientation="vertical" >
+
+        <!-- Header -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/todo_list_header"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <!-- Text Listing -->
+
+        <ListView
+            android:id="@+id/activity_view_all_tasks_Listview_all_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/pale_yellow"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:scrollbarStyle="outsideOverlay" >
+        </ListView>
+    </LinearLayout>
 
 </RelativeLayout>

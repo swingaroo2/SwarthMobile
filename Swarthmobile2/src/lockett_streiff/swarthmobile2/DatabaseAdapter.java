@@ -182,8 +182,8 @@ public class DatabaseAdapter {
 		initialValues.put(TASK_TABLE_COLUMN_DUE_DATE, task.getDueDate().getTimeInMillis());
 		initialValues.put(TASK_TABLE_COLUMN_NOTE, task.getNote());
 		initialValues.put(TASK_TABLE_COLUMN_PRIORITY, task.getPriorityLevel());
-		initialValues.put(TASK_TABLE_COLUMN_GROUP, task.getGroup().getId());
-		initialValues.put(TASK_TABLE_COLUMN_COMPLETION_STATUS, task.getCompletionStatus());
+		initialValues.put(TASK_TABLE_COLUMN_GROUP, "");
+		initialValues.put(TASK_TABLE_COLUMN_COMPLETION_STATUS, 0);
 		sqLiteDatabase.insert(TASK_TABLE_NAME, null, initialValues);
 		
 		// insert collaborators

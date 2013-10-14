@@ -2,184 +2,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/general_background"
+    android:background="@color/rosybrown"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:scrollbarStyle="outsideOverlay" >
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:stretchColumns="1" >
+        android:layout_marginTop="10dp"
+        android:background="@color/pale_yellow"
+        android:orientation="vertical" >
 
-        <TableRow>
+        <!-- Header -->
 
-            <TextView
-                android:padding="3dip"
-                android:text="@string/activity_modify_task_TextView_task_title_String_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="New/Modify Task"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/activity_modify_task_Edittext_task_title"
-                android:ems="10"
-                android:gravity="right"
-                android:hint="@string/activity_modify_task_EditText_task_title_String_hint"
-                android:padding="3dip" />
-        </TableRow>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="1" >
 
-        <View
-            android:layout_height="2dip"
-            android:background="#FF909090" />
+            <TableRow
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp" >
 
-        <TableRow>
+                <TextView
+                    android:gravity="center"
+                    android:paddingBottom="10dip"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dip"
+                    android:text="@string/activity_modify_task_TextView_task_title_String_title"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:padding="3dip"
-                android:text="@string/activity_modify_task_TextView_due_date_String_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/activity_modify_task_Edittext_task_title"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:ems="10"
+                    android:gravity="left"
+                    android:hint="@string/activity_modify_task_EditText_task_title_String_hint"
+                    android:paddingBottom="10dip"
+                    android:paddingTop="10dip" />
+            </TableRow>
 
-            <DatePicker
-                android:id="@+id/activity_modify_task_Datepicker_due_date"
-                android:calendarViewShown="false"
-                android:gravity="right"
-                android:padding="3dip" />
-        </TableRow>
+            <TableRow android:paddingTop="20dp" >
 
-        <View
-            android:layout_height="2dip"
-            android:background="#FF909090" />
+                <TextView
+                    android:gravity="center"
+                    android:paddingBottom="10dip"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dip"
+                    android:text="@string/activity_modify_task_TextView_due_date_String_title"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-        <TableRow>
+                <DatePicker
+                    android:id="@+id/activity_modify_task_Datepicker_due_date"
+                    android:calendarViewShown="false"
+                    android:gravity="center" />
+            </TableRow>
 
-            <TextView
-                android:padding="3dip"
-                android:text="@string/activity_modify_task_TextView_note_String_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+            <TableRow android:paddingBottom="20dp" >
 
-            <EditText
-                android:id="@+id/activity_modify_task_EditText_note"
-                android:ems="10"
-                android:gravity="right"
-                android:hint="@string/activity_modify_task_EditText_note_String_hint"
-                android:inputType="textMultiLine"
-                android:lines="5"
-                android:padding="3dip"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </TableRow>
+                <TextView
+                    android:gravity="center"
+                    android:paddingBottom="10dip"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dip"
+                    android:text="@string/activity_modify_task_TextView_note_String_title"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-        <View
-            android:layout_height="2dip"
-            android:background="#FF909090" />
-
-        <TableRow>
-
-            <TextView
-                android:padding="3dip"
-                android:text="@string/activity_modify_task_Textview_priority_level_String_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/activity_modify_task_Spinner_priority_level"
-                android:layout_weight="1"
-                android:entries="@array/activity_modify_task_Spinner_priority_level_Stringarray_values"
-                android:gravity="right"
-                android:padding="3dip"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </TableRow>
-
-        <!-- <View
-            android:layout_height="2dip"
-            android:background="#FF909090" />
-
-        <TableRow>
-
-            <TextView
-                android:padding="3dip"
-                android:text="@string/activity_modify_task_TextView_collaborators_String_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_weight="1"
-                android:gravity="right"
-                android:orientation="vertical"
-                android:padding="3dip" >
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
+                <EditText
+                    android:id="@+id/activity_modify_task_EditText_note"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:ems="10"
+                    android:gravity="left|bottom"
+                    android:hint="@string/activity_modify_task_EditText_note_String_hint"
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:paddingBottom="10dip"
+                    android:paddingTop="10dip"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
 
-                    <Button
-                        android:id="@+id/activity_modify_task_Button_select_collaborator"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableLeft="@android:drawable/ic_menu_add"
-                        android:text="@string/activity_modify_task_Button_select_collaborator_String_title" />
+            <TableRow
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp" >
 
-                    <Button
-                        android:id="@+id/activity_modify_task_Button_clear_collaborator"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
-                        android:text="@string/activity_modify_task_Button_clear_collaborator_String_title" />
-                </LinearLayout>
+                <TextView
+                    android:gravity="center"
+                    android:paddingBottom="10dip"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/activity_modify_task_Textview_priority_level_String_title"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
-                <ListView 
-                    android:id="@+id/activity_modify_task_ListView_collaborators"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" ></ListView>
-            </LinearLayout>
-        </TableRow>
-
-        <View
-            android:layout_height="2dip"
-            android:background="#FF909090" />
-
-        <TableRow>
-
-            <TextView
-                android:padding="3dip"
-                android:text="@string/activity_modify_task_TextView_group_String_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/activity_modify_task_Spinner_group"
-                android:layout_weight="1"
-                android:entries="@array/sample_groups"
-                android:gravity="right"
-                android:padding="3dip"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </TableRow>
-
-        <View
-            android:layout_height="2dip"
-            android:background="#FF909090" />
-
-        <TableRow>
-
-            <TextView
-                android:padding="3dip"
-                android:text="@string/activity_modify_task_TextView_completion_status_String_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/activity_modify_task_Spinner_completion_status"
-                android:entries="@array/activity_modify_task_Spinner_completion_status_Stringarray_values"
-                android:gravity="right"
-                android:padding="3dip"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </TableRow> -->
-    </TableLayout> 
+                <Spinner
+                    android:id="@+id/activity_modify_task_Spinner_priority_level"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:entries="@array/activity_modify_task_Spinner_priority_level_Stringarray_values"
+                    android:gravity="left"
+                    android:paddingBottom="10dip"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
 
 </ScrollView>
