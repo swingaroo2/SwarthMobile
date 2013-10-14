@@ -85,31 +85,7 @@ public class ViewTaskDetailActivity extends GeneralActivity {
 				break;
 			}
 			priorityTextView.setText(priorityString);
-			// set the completion status
-			TextView completionTextView = (TextView) findViewById(R.id.activity_view_task_detail_TextView_status_content);
-			String completionString;
-			if(this.task.getCompletionStatus() == Task.TASK_COMPLETED){
-				completionString = getString(R.string.activity_modify_task_Spinner_completion_status_Item_yes_String_title);
-			} else {
-				completionString = getString(R.string.activity_modify_task_Spinner_completion_status_Item_no_String_title);
-			}
-			completionTextView.setText(completionString);
-			// set the group
-			TextView groupTextView = (TextView) findViewById(R.id.activity_view_task_detail_TextView_group_content);
-			groupTextView.setText(this.task.getGroup().getTitle());
-			// set the collaborators
-			TextView collaboratorsTextView = (TextView) findViewById(R.id.activity_view_task_detail_TextView_collaborators_content);
-			if(this.task.getCollaborators().isEmpty()){
-				// if there is no collaborators, show the message
-				collaboratorsTextView.setText("There is no collaborators.");
-			} else {
-				// otherwise, show all collaborators
-				String collaboratorString = "";
-				for(String collaboratorEmail : this.task.getCollaborators()){
-					collaboratorString = collaboratorString + collaboratorEmail + "\n";
-				}
-				collaboratorsTextView.setText(collaboratorString);
-			}
+			
 		}
 	}
 
