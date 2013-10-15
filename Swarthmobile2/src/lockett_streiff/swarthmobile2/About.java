@@ -65,7 +65,7 @@ public class About extends Activity {
 		case R.id.action_contact_app_support:
 			Intent i = new Intent(Intent.ACTION_SEND);
 			i.setType("message/rfc822");
-			i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"zachls17@gmail.com"});
+			i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"swarthmobile@gmail.com"});
 			i.putExtra(Intent.EXTRA_SUBJECT, "SwarthMobile: support requested");
 			try {
 			    startActivity(Intent.createChooser(i, "Send mail..."));

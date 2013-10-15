@@ -19,7 +19,7 @@ public class ConfirmDeletionDialog {
 		Dialog confirmCancelDialog;
 		confirmCancelDialog = new AlertDialog.Builder(sourceActivity)
 		.setIcon(android.R.drawable.ic_menu_help)
-		.setTitle("Are you sure to want to delete?")
+		.setTitle("Confirm deletion?")
 		.setPositiveButton("Yes",
 				new ConfirmDeleteDialogForTaskPositiveButtonListener(sourceActivity, task, databaseAdapter))
 		.setNegativeButton("No",

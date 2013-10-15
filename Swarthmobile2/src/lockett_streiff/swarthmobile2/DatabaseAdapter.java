@@ -113,11 +113,11 @@ public class DatabaseAdapter {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			// Create the Group table 
-			db.execSQL(DatabaseAdapter.GROUP_TABLE_CREATE);
+			//db.execSQL(DatabaseAdapter.GROUP_TABLE_CREATE);
 			// Create the Task table
 			db.execSQL(DatabaseAdapter.TASK_TABLE_CREATE);
 			// Create the collaborator table
-			db.execSQL(DatabaseAdapter.COLLABORATOR_TABLE_CREATE);
+			//db.execSQL(DatabaseAdapter.COLLABORATOR_TABLE_CREATE);
 		}
 
 		@Override

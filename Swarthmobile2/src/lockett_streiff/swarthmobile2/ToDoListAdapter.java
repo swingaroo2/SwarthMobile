@@ -1,50 +1,74 @@
 package lockett_streiff.swarthmobile2;
 
-import java.util.List;
-
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class ToDoListAdapter extends BaseAdapter {
-
-	Context context;
-    List<String> data;
-    private LayoutInflater inflater = null;
+public class ToDoListAdapter extends SimpleCursorAdapter {
+	private final Context context;
+	private final int layout;
+	private final Cursor cursor;
+	private final LayoutInflater mLayoutInflater;
+	private final int mTitleIndex;
+	private final String mTitleStr;
 	
-	public ToDoListAdapter(Context context, List<String> items) {
+	private final class ViewHolder {
+		public TextView text;
+		public Button delete;
+	}
+
+	public ToDoListAdapter(Context context, int layout, Cursor c, String[] from,int[] to) {
+		super(context, layout, c, from, to);
 		this.context = context;
-		this.data = items;
-		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
-
-	@Override
-	public int getCount() {
-		return this.data.size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return this.data.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        if (vi == null)
-            vi = inflater.inflate(R.layout.todo_list_item, null);
-        TextView text = (TextView) vi.findViewById(R.id.todo_list_item_tv);
-        text.setText(this.data.get(position));
-        return vi;
+		this.layout = layout;
+		this.cursor = c;
+		this.mTitleIndex = c.getColumnIndex(DatabaseAdapter.TASK_TABLE_COLUMN_TITLE);
+		this.mTitleStr = c.getString(this.mTitleIndex);
+		this.mLayoutInflater = LayoutInflater.from(this.context);
 		
+	}
+
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		
+		Cursor c = cursor;
+
+		final LayoutInflater inflater = LayoutInflater.from(context);
+		View v = inflater.inflate(layout, parent, false);
+
+		int nameCol = c.getColumnIndex(DatabaseAdapter.TASK_TABLE_COLUMN_TITLE);;
+		String name = c.getString(this.mTitleIndex);
+
+		/**
+		 * Next set the name of the entry.
+		 */    
+		TextView text = (TextView) v.findViewById(R.id.todo_list_item_tv);
+		if (text != null) {
+			text.setText(name);
+		}
+
+		return v;
+	}
+
+	@Override
+	public void bindView(View v, Context context, Cursor c) {
+		ViewHolder vh = new ViewHolder();
+		
+		int nameCol = this.mTitleIndex;
+		String name = this.mTitleStr;
+
+		/**
+		 * Next set the name of the entry.
+		 */    
+		TextView text = (TextView) v.findViewById(R.id.todo_list_item_tv);
+		if (text != null) {
+			text.setText(name);
+		}
 	}
 
 }

@@ -56,7 +56,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
 	}
 
 	@Override
-	public View getView(final int position, View convertView, final ViewGroup parent) {
+	public View getView(final int position, View convertView,
+			final ViewGroup parent) {
 		// Log.i(tag, "getView");
 		View vi = convertView;
 		Button addToCal;
@@ -73,7 +74,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 			TextView location = (TextView) vi.findViewById(R.id.location);
 			// Log.i(tag,String.format("Get view %d", position));
 			name.setText(event.getTitle());
-			//Log.i(tag, "Time: "+event.getTime());
+			// Log.i(tag, "Time: "+event.getTime());
 			time.setText(event.getTime());
 			location.setText(event.getLocation());
 		} else {
@@ -86,7 +87,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 			TextView location = (TextView) vi2.findViewById(R.id.location);
 			// Log.i(tag,String.format("Get view %d", position));
 			name.setText(event.getTitle());
-			//Log.i(tag, "Time: "+event.getTime());
+			// Log.i(tag, "Time: "+event.getTime());
 			time.setText(event.getTime());
 			location.setText(event.getLocation());
 
@@ -95,11 +96,13 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
 			@Override
 			public void onClick(View v) {
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getLink()));
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri
+						.parse(event.getLink()));
 				context.startActivity(browserIntent);
-				
-			}});
-		
+
+			}
+		});
+
 		addToCal.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -111,7 +114,9 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				String evTitle = event.getTitle();
 				String evLocation = event.getLocation();
 				int[] dates = event.getDateAsMillis();
-				Log.i(tag,"dates["+dates.length+"]: "+Arrays.toString(dates));
+				Log.i(tag,
+						"dates[" + dates.length + "]: "
+								+ Arrays.toString(dates));
 				long time1;
 				long time2;
 				Calendar c1 = new GregorianCalendar(dates[2], dates[0] - 1,
@@ -121,16 +126,16 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				if (dates.length > 3) {
 					// Log.i(tag,
 					// "New calendar at date: "+(dates[3]-1)+"/"+dates[4]+"/"+dates[5]);
-					c2 = new GregorianCalendar(dates[5], dates[3]-1, dates[4]);
+					c2 = new GregorianCalendar(dates[5], dates[3] - 1, dates[4]);
 				}
 				int[] times = event.getTimeAsMillis();
-				Log.i(tag, "Time: "+Arrays.toString(times));
+				Log.i(tag, "Time: " + Arrays.toString(times));
 				c1.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 				c1.set(Calendar.HOUR, times[0]);
 				c1.set(Calendar.MINUTE, times[1]);
 				c1.set(Calendar.SECOND, 0);
 				c1.set(Calendar.MILLISECOND, 0);
-				//Log.i(tag, "dates.length: " + dates.length);
+				// Log.i(tag, "dates.length: " + dates.length);
 				c2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 				c2.set(Calendar.HOUR, times[2]);
 				c2.set(Calendar.MINUTE, times[3]);
@@ -142,8 +147,10 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				Log.i(tag, "What: " + evTitle);
 				Log.i(tag, "Where: " + evLocation);
 				if (!event.getTime().contains("All Day")) {
-					if (format.format(c1.getTime()) != format.format(c2.getTime())) {
-						Log.i(tag, "When: " + format.format(c1.getTime())+ " - " + format.format(c2.getTime()));
+					if (format.format(c1.getTime()) != format.format(c2
+							.getTime())) {
+						Log.i(tag, "When: " + format.format(c1.getTime())
+								+ " - " + format.format(c2.getTime()));
 					} else {
 						Log.i(tag, "When: " + format.format(c1.getTime()));
 					}
@@ -171,12 +178,14 @@ public class EventAdapter extends ArrayAdapter<Event> {
 					if (uEmail != null) {
 						// confirmEmail(uEmail);
 						/* Just add the event to the calendar */
-						CalendarClient client = new CalendarClient(EventAdapter.context);
+						CalendarClient client = new CalendarClient(
+								EventAdapter.context);
 						Log.i(tag, "Null checks:\nevent: " + event
 								+ "\nevTitle: " + evTitle + "\nevLocation: "
 								+ evLocation + "\ntime1: " + time1
 								+ "\ntime2: " + time2 + "\nuEmail: " + uEmail);
-						client.newEvent(event, evTitle, evLocation, time1, time2, "Swarthmobile", uEmail);
+						client.newEvent(event, evTitle, evLocation, time1,
+								time2, "Swarthmobile", uEmail);
 					} else {
 						setEmail();
 					}
@@ -192,10 +201,11 @@ public class EventAdapter extends ArrayAdapter<Event> {
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this.context);
 		final EditText input = new EditText(this.context);
 		alert.setTitle("Please create a Google account on this device.");
-		alert.setMessage("Google Calendar requires an account with an email address on your Android device to create events."
-				+ "To view your accounts and create a new one, see your device settings page."
+		alert.setMessage("Google Calendar requires an account with a Gmail address on your Android device to create events."
+				+ "To view your accounts and create a new one, check your device's settings. "
 				+ "If you need further assistance, please contact ITS.\n\n"
-				+ "Swarthmobile and its developers will never sell, compromise or use your email address for anything other than creating calendar events.");
+				+ "Swarthmobile and its developers will never sell, compromise or otherwise use your email address for anything other than creating calendar events."
+				+ "We understand how sensitive this information is.");
 		alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 			}
@@ -214,7 +224,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
 				+ "We found this email address: "
 				+ email
 				+ "\n\n"
-				+ "Swarthmobile and its developers will never sell, compromise or use your email address for anything other than creating calendar events.");
+				+ "Swarthmobile and its developers will never sell, compromise or otherwise use your email address for anything other than creating calendar events."
+				+ "We understand how sensitive this information is.");
 		alert.setPositiveButton("Use this email address",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {

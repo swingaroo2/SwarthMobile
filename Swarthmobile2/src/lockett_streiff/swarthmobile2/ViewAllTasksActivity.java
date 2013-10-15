@@ -1,10 +1,12 @@
 package lockett_streiff.swarthmobile2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,9 @@ public class ViewAllTasksActivity extends GeneralActivity {
 
 	// The List View that shows all Tasks
 	private ListView allTasksListView;
+	
+	// ToDoListAdapter for custom ListView
+	private ToDoListAdapter tdAdapter;
 
 	// DatabaseAdapter for interacting with database
 	private DatabaseAdapter databaseAdapter;
@@ -27,6 +32,8 @@ public class ViewAllTasksActivity extends GeneralActivity {
 	// Adapter for All Tasks List View
 	private SimpleCursorAdapter allTasksListViewAdapter;
 
+	private static final String tag = "ViewAllTasksActivity";
+
 	// The Add New Task request code
 	public static final int ADD_NEW_TASK_REQUEST_CODE = 1;
 
@@ -36,6 +43,7 @@ public class ViewAllTasksActivity extends GeneralActivity {
 		setContentView(R.layout.activity_view_all_tasks);
 
 		// set action listener for allTasksListView
+		
 		allTasksListView = (ListView) findViewById(R.id.activity_view_all_tasks_Listview_all_tasks);
 		allTasksListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -63,15 +71,18 @@ public class ViewAllTasksActivity extends GeneralActivity {
 			allTasksCursor = databaseAdapter.getAllTasks();
 			// TODO replace the deprecated startManagingCursor method with an alternative one
 			startManagingCursor(allTasksCursor);
-			// Get data from which column
+			// Select DB columns to use in this Activity
 			String[] from = new String[]{DatabaseAdapter.TASK_TABLE_COLUMN_TITLE};
-			// Put data to which components in layout
+			// XML-defined Views to which DB data is bound
 			int[] to = new int[]{R.id.activity_view_all_groups_listview_all_groups_layout_textview_group_title};
+			Log.i(tag , Arrays.toString(to));
 			// Init the adapter for list view
 			// TODO replace the deprecated SimpleCursorAdapter with an alternative one
+			//tdAdapter = new ToDoListAdapter(this, R.layout.todo_list_item, allTasksCursor, from, to);
 			allTasksListViewAdapter = new SimpleCursorAdapter(this,R.layout.activity_view_all_groups_listview_all_groups_layout, allTasksCursor, from, to);
 			// Set the adapter for the list view
 			this.allTasksListView.setAdapter(allTasksListViewAdapter);
+			//this.allTasksListView.setAdapter(tdAdapter);
 		}
 	}
 

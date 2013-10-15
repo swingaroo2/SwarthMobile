@@ -1,6 +1,5 @@
 package lockett_streiff.swarthmobile2;
 
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.HttpEntity;
@@ -29,44 +29,29 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+public class MainMenuAdapter extends ArrayAdapter<String> {
 
-public class MainMenu extends Activity {
-
-	private static final String tag = "MainMenu";
-
-	/* Boo you, carousel */
-	private String[] applets;
-	private ListView lv;
-	private ArrayAdapter<String> adapter;
-	private MainMenuAdapter mma;
-
+	private static final String tag = "MainMenuAdapter";
+	private List<String> applets;
+	private LayoutInflater inflater;
+	private static Activity context;
+	private static ListView lv;
 	private static int type;
-
-	/* ListView constants */
-	private static final int EVENTS = 0;
-	private static final int TODO = 1;
-	private static final int SHARPLES = 2;
-	private static final int TRANSPORTATION = 3;
-	private static final int CONCERTS = 4;
-	private static final int HOURS = 5;
-	private static final int ABOUT = 6;
-
+	
 	/* Copied from v1.0 */
 	String train;
 	String shuttle;
@@ -78,75 +63,105 @@ public class MainMenu extends Activity {
 	ArrayList<String> hours;
 	ArrayList<String> transportation;
 	ProgressDialog Pdialog;
+	
+	/* ListView constants */
+	private static final int EVENTS = 0;
+	private static final int TODO = 1;
+	private static final int SHARPLES = 2;
+	private static final int TRANSPORTATION = 3;
+	private static final int CONCERTS = 4;
+	private static final int HOURS = 5;
+	private static final int ABOUT = 6;
+
+	public MainMenuAdapter(Activity context, List<String> applets) {
+		super(context, R.layout.event_list_item);
+		MainMenuAdapter.context = context;
+		this.applets = applets;
+		this.inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.lv = (ListView) context.findViewById(R.id.listview);
+	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_menu, menu);
-		return true;
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return applets.size();
+	}
+
+	@Override
+	public String getItem(int position) {
+		// TODO Auto-generated method stub
+		return applets.get(position);
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View v = convertView;
+		TextView tv;
+		Toast.makeText(context, "getView", Toast.LENGTH_SHORT).show();
+
+		if (v == null) {
+			LayoutInflater vi;
+			vi = LayoutInflater.from(getContext());
+			v = vi.inflate(R.layout.main_menu_list, null);
+
+		}
+
+		String p = applets.get(position);
+
+		if (p != null) {
+			
+			tv = (TextView) v.findViewById(R.id.main_menu_tv);
+			
+			if (tv != null) {
+				tv.setText(applets.get(position));
+			}
+			
+			// Put conditional code from MainMenu.java here
+			lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> av, View v, int position,
+						long id) {
+					String clicked = (String) ((TextView) v).getText();
+					//Log.i(tag, "ID: " + id);
+
+					// if (clicked.equals("Campus Events")) {eventsOnClick();}
+
+					switch ((int) id) {
+					case EVENTS:
+						eventsOnClick();
+						break;
+					case TODO:
+						todoOnClick();
+						break;
+					case SHARPLES:
+						sharplesOnClick();
+						break;
+					case TRANSPORTATION:
+						transportationOnClick();
+						break;
+					case CONCERTS:
+						concertsOnClick();
+						break;
+					case HOURS:
+						hoursOnClick();
+						break;
+					case ABOUT:
+						aboutOnClick();
+						break;
+					}
+
+				}
+			});
+			
+		}
+
+
+
+		return v;
 	}
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main_menu);
-
-		/* Set title font */
-		Typeface tf = Typeface.createFromAsset(getAssets(),
-				"fonts/FilosofiaRegular.ttf");
-		TextView header = (TextView) this.findViewById(R.id.logo);
-		header.setTypeface(tf);
-
-		/* Set up ListView */
-		lv = (ListView) this.findViewById(R.id.listview);
-		applets = new String[] { "Campus Events", "ToDo List", "Sharples Menu",
-				"Van and Train Schedules", "Concerts in Philly", "Hours", "About the Developers" };
-		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, applets);
-		//mma = new MainMenuAdapter(this,Arrays.asList(applets));
-		
-		lv.setAdapter(adapter);
-		//lv.setAdapter(mma);
-
-		/* Set up OnItemClickListener */
-		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> av, View v, int position,
-					long id) {
-				String clicked = (String) ((TextView) v).getText();
-				//Log.i(tag, "ID: " + id);
-
-				// if (clicked.equals("Campus Events")) {eventsOnClick();}
-
-				switch ((int) id) {
-				case EVENTS:
-					eventsOnClick();
-					break;
-				case TODO:
-					todoOnClick();
-					break;
-				case SHARPLES:
-					sharplesOnClick();
-					break;
-				case TRANSPORTATION:
-					transportationOnClick();
-					break;
-				case CONCERTS:
-					concertsOnClick();
-					break;
-				case HOURS:
-					hoursOnClick();
-					break;
-				case ABOUT:
-					aboutOnClick();
-					break;
-				}
-
-			}
-		});
-	}
-
 	/*
 	 * Check if a network connection is enabled (requires ACCESS_NETWORK_STATE)
 	 * permission
@@ -154,7 +169,7 @@ public class MainMenu extends Activity {
 	private boolean isNetworkOnline() {
 		boolean status = false;
 		try {
-			ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo netInfo = cm.getNetworkInfo(0);
 			if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
 				status = true;
@@ -169,14 +184,14 @@ public class MainMenu extends Activity {
 		}
 		return status;
 	}
-
+	
 	/* onClick helper functions for ListView items */
 	private void eventsOnClick() {
-		startActivity(new Intent(this, Events.class));
+		context.startActivity(new Intent(context, Events.class));
 	}
 
 	private void todoOnClick() {
-		startActivity(new Intent(this, ViewAllTasksActivity.class));
+		context.startActivity(new Intent(context, ViewAllTasksActivity.class));
 	}
 	
 	public void sharplesOnClick() {
@@ -184,7 +199,7 @@ public class MainMenu extends Activity {
 		if (isNetworkOnline()) {
 			new GetWebData().execute();
 		} else {
-			Toast.makeText(MainMenu.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -193,7 +208,7 @@ public class MainMenu extends Activity {
 		if (isNetworkOnline()) {
 			new GetWebData().execute();
 		} else {
-			Toast.makeText(MainMenu.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -202,9 +217,9 @@ public class MainMenu extends Activity {
 			Intent browserIntent = new Intent(
 					Intent.ACTION_VIEW,
 					Uri.parse("http://www.songkick.com/metro_areas/5202-us-philadelphia"));
-			startActivity(browserIntent);
+			context.startActivity(browserIntent);
 		} else {
-			Toast.makeText(MainMenu.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
 			
 		}
 	}
@@ -214,20 +229,20 @@ public class MainMenu extends Activity {
 			type = HOURS;
 			new GetWebData().execute();
 		} else {
-			Toast.makeText(MainMenu.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	public void aboutOnClick() {
-		startActivity(new Intent(this, About.class));
+		context.startActivity(new Intent(context, About.class));
 	}
-	
+
 	private class GetWebData extends
 	AsyncTask<ArrayList<String>, String, String> {
 
 		@Override
 		protected void onPreExecute() {
-			Pdialog = new ProgressDialog(MainMenu.this);
+			Pdialog = new ProgressDialog(context);
 			Pdialog.setMessage("Loading...");
 			Pdialog.setCancelable(true);
 			Pdialog.show();
@@ -260,10 +275,10 @@ public class MainMenu extends Activity {
 			processHTML(result);
 			switch (type) {
 			case SHARPLES:
-				AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainMenu.this);
+				AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(context);
 				alertDialog2.setTitle("Sharples Menu");
 				final ArrayAdapter<String> menuadapter = new ArrayAdapter<String>(
-						MainMenu.this, R.layout.sharples_dialog_layout, menu);
+						context, R.layout.sharples_dialog_layout, menu);
 				alertDialog2.setAdapter(menuadapter, null);
 				alertDialog2.setNeutralButton("Return",
 						new DialogInterface.OnClickListener() {
@@ -276,10 +291,10 @@ public class MainMenu extends Activity {
 				alert2.show();
 				break;
 			case TRANSPORTATION:
-				AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainMenu.this);
+				AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 				alertDialog.setTitle("Transportation");
 				final ArrayAdapter<String> trainAdapter = new ArrayAdapter<String>(
-						MainMenu.this, R.layout.hours_dialog_layout,
+						context, R.layout.hours_dialog_layout,
 						transportation);
 				alertDialog.setAdapter(trainAdapter, null);
 				alertDialog.setPositiveButton("Catch Train",
@@ -306,8 +321,8 @@ public class MainMenu extends Activity {
 							// Log.i(MainMenu.tag,"temp is: " + temp);
 							timeList.set(i, temp);
 						}
-						final ArrayAdapter<String> timesAdapter = new ArrayAdapter<String>(MainMenu.this, R.layout.hours_dialog_layout, timeList);
-						AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainMenu.this);
+						final ArrayAdapter<String> timesAdapter = new ArrayAdapter<String>(context, R.layout.hours_dialog_layout, timeList);
+						AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(context);
 						alertDialog2.setTitle("Please select a train time");
 
 						alertDialog2.setAdapter(timesAdapter, new DialogInterface.OnClickListener() {
@@ -361,8 +376,8 @@ public class MainMenu extends Activity {
 									break;
 								}
 								yourDate = yourDate.replaceAll(yourDate.substring(0, 3).trim(),monthString);
-								Log.i(MainMenu.tag,"yourDate: "+ yourDate);
-								Log.i(MainMenu.tag, "Times: "+timesAdapter.getItem(which)+" - "+timesAdapter.getItem(which+1));
+								Log.i(MainMenuAdapter.tag,"yourDate: "+ yourDate);
+								Log.i(MainMenuAdapter.tag, "Times: "+timesAdapter.getItem(which)+" - "+timesAdapter.getItem(which+1));
 								String selectedTrain[];
 								if (which != timesAdapter.getCount() - 1) {
 									selectedTrain = new String[] {
@@ -397,15 +412,15 @@ public class MainMenu extends Activity {
 									cal.set(Calendar.MINUTE, Integer.parseInt(pTrainTime[1]));
 									long time = cal.getTimeInMillis();
 									/* Get email */
-									if (UserEmailFetcher.getEmail(MainMenu.this) == null) {
+									if (UserEmailFetcher.getEmail(context) == null) {
 										Toast.makeText(
-												MainMenu.this,
+												context,
 												"Create a Google account on your device to access calendar functionality", 
 												Toast.LENGTH_SHORT)
 												.show();
 									} else {
-										String email = UserEmailFetcher.getEmail(MainMenu.this);
-										CalendarClient trainClient = new CalendarClient(MainMenu.this);
+										String email = UserEmailFetcher.getEmail(context);
+										CalendarClient trainClient = new CalendarClient(context);
 										trainClient.newEvent(new Event(), name, location, time, time, "Swarthmobile", email);
 									}
 
@@ -454,9 +469,9 @@ public class MainMenu extends Activity {
 							timeList.set(i, temp);
 						}
 						final ArrayAdapter<String> timesAdapter = new ArrayAdapter<String>(
-								MainMenu.this,
+								context,
 								R.layout.hours_dialog_layout, timeList);
-						AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainMenu.this);
+						AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(context);
 						alertDialog2
 						.setTitle("Please select a shuttle time");
 						// alertDialog2.setMessage("Breakfast: " +"\n\n" + breakfast + "\n\n\n" + "Lunch: " + "\n\n" + lunch + "\n\n\n" + "Dinner: " + "\n\n" + dinner);
@@ -559,15 +574,15 @@ public class MainMenu extends Activity {
 									cal.set(Calendar.MINUTE, Integer.parseInt(pTrainTime[1]));
 									long time = cal.getTimeInMillis();
 									/* Get email */
-									if (UserEmailFetcher.getEmail(MainMenu.this) == null) {
+									if (UserEmailFetcher.getEmail(context) == null) {
 										Toast.makeText(
-												MainMenu.this,
+												context,
 												"Create a Google account on your device to access calendar functionality", 
 												Toast.LENGTH_SHORT)
 												.show();
 									} else {
-										String email = UserEmailFetcher.getEmail(MainMenu.this);
-										CalendarClient trainClient = new CalendarClient(MainMenu.this);
+										String email = UserEmailFetcher.getEmail(context);
+										CalendarClient trainClient = new CalendarClient(context);
 										trainClient.newEvent(new Event(), name, location, time, time, "Swarthmobile", email);
 									}
 
@@ -607,10 +622,10 @@ public class MainMenu extends Activity {
 			case HOURS:
 				hours.remove(5);
 				hours.remove(5);
-				AlertDialog.Builder alertDialog3 = new AlertDialog.Builder(MainMenu.this);
+				AlertDialog.Builder alertDialog3 = new AlertDialog.Builder(context);
 				alertDialog3.setTitle("Hours");
 				final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(
-						MainMenu.this, R.layout.hours_dialog_layout, hours);
+						context, R.layout.hours_dialog_layout, hours);
 				alertDialog3.setAdapter(adapter2, null);
 				alertDialog3.setNeutralButton("Cancel",
 						new DialogInterface.OnClickListener() {
@@ -666,7 +681,7 @@ public class MainMenu extends Activity {
 									SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
 									Date d = new Date();
 									String day = sdf.format(d).trim();
-									Log.i(MainMenu.tag, day);
+									Log.i(MainMenuAdapter.tag, day);
 									if (count == 0) {
 										if (!day.contains("Sunday")) {
 											breakfast = "BREAKFAST:" + "\n" + tag.toPlainTextString();
@@ -805,4 +820,5 @@ public class MainMenu extends Activity {
 			}
 		}
 	}
+	
 }
