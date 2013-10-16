@@ -10,12 +10,12 @@ VERSION 1.0.0
 
 Contains the following applets
 
-Campus Events:
+Campus Events
 -----------------------------
 
 Users can select an ActionBar menu option to choose a date range in which to see campus events. These events are pulled from the XML in the calendar.swarthmore.edu RSS feed. XML parsing is drastically faster than HMTL scraping, my method of choice for the class project version of Swarthmobile. Pressing "Get Events" or either of the two shortcut buttons populates a ListView of campus events. Each list item has two options: "Add to Calendar" and "?". "Add to Calendar" adds the event to the user's Calendar app, provided a Google profile exists on their device. "?" redirects the user to the corresponding event at www.calendar.swarthmore.edu. This option is useful if the user wants more information about the event or is confused about something in the list item text. If a time has an asterisk next to it, the actual start and/or end time did not exist in the original event. The given time is just a placeholder for the calendar and can be modified to the user's liking. Events spanning multiple days are added in aggregate in the user's calendar and can be easily deleted in aggregate as well.
 
-ToDo List:
+ToDo List
 -----------------------------
 
 Uses a SQLite database to store user-defined tasks. Each task has a title, due date, notes, and a priority level. Notifcations for due dates and priority categorization are not implemented in version 1.0.0. I tried extending SimpleCursorAdapter to add a delete Button to each task, but was unable to do so. This will be implemented in a future update.
