@@ -79,13 +79,14 @@ public class ViewAllGroupsActivity extends GeneralActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
+		return false;
+		/*switch (item.getItemId()){
 		case R.id.activity_view_all_groups_Menu_actionbar_Item_add_group:
 			ApplicationNavigationHandler.addNewGroup(this, ViewAllGroupsActivity.ADD_NEW_GROUP_REQUEST_CODE);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
-		}
+		}*/
 	}
 
 	@Override

@@ -35,7 +35,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -115,7 +114,7 @@ public class MainMenu extends Activity {
 			public void onItemClick(AdapterView<?> av, View v, int position,
 					long id) {
 				String clicked = (String) ((TextView) v).getText();
-				//Log.i(tag, "ID: " + id);
+				////Log.i(tag, "ID: " + id);
 
 				// if (clicked.equals("Campus Events")) {eventsOnClick();}
 
@@ -303,7 +302,7 @@ public class MainMenu extends Activity {
 							}
 							temp = temp.replaceAll(sub,
 									" " + sub.toUpperCase()).trim();
-							// Log.i(MainMenu.tag,"temp is: " + temp);
+							// //Log.i(MainMenu.tag,"temp is: " + temp);
 							timeList.set(i, temp);
 						}
 						final ArrayAdapter<String> timesAdapter = new ArrayAdapter<String>(MainMenu.this, R.layout.hours_dialog_layout, timeList);
@@ -361,8 +360,8 @@ public class MainMenu extends Activity {
 									break;
 								}
 								yourDate = yourDate.replaceAll(yourDate.substring(0, 3).trim(),monthString);
-								Log.i(MainMenu.tag,"yourDate: "+ yourDate);
-								Log.i(MainMenu.tag, "Times: "+timesAdapter.getItem(which)+" - "+timesAdapter.getItem(which+1));
+								//Log.i(MainMenu.tag,"yourDate: "+ yourDate);
+								//Log.i(MainMenu.tag, "Times: "+timesAdapter.getItem(which)+" - "+timesAdapter.getItem(which+1));
 								String selectedTrain[];
 								if (which != timesAdapter.getCount() - 1) {
 									selectedTrain = new String[] {
@@ -392,7 +391,7 @@ public class MainMenu extends Activity {
 									Calendar cal = Calendar.getInstance(Locale.US);
 									String trainTime = Event.convertTo24HoursFormat(timesAdapter.getItem(which).replace(" ", ""));
 									String[] pTrainTime = trainTime.split(":");
-									Log.i(tag, "trainTime: "+trainTime);
+									//Log.i(tag, "trainTime: "+trainTime);
 									cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(pTrainTime[0]));
 									cal.set(Calendar.MINUTE, Integer.parseInt(pTrainTime[1]));
 									long time = cal.getTimeInMillis();
@@ -448,7 +447,7 @@ public class MainMenu extends Activity {
 							String sub = temp.substring(temp.length() - 3);
 							temp = temp.replaceAll(sub," " + sub.toUpperCase()).trim();
 							/*
-							 * Log.i(MainMenu.tag,"Shuttle temp is: " +
+							 * //Log.i(MainMenu.tag,"Shuttle temp is: " +
 							 * temp);
 							 */
 							timeList.set(i, temp);
@@ -471,7 +470,7 @@ public class MainMenu extends Activity {
 								// get current date time with
 								// Date()
 								Date date = new Date();
-								// Log.i(MainMenu.tag,dateFormat.format(date));
+								// //Log.i(MainMenu.tag,dateFormat.format(date));
 								// don't print it, but save it!
 								String yourDate = dateFormat
 										.format(date);
@@ -523,7 +522,7 @@ public class MainMenu extends Activity {
 								yourDate = yourDate.replaceAll(
 												yourDate.substring(0, 3).trim(),
 												monthString);
-								System.out.println("yourDate is:"+ yourDate);
+								//System.out.println("yourDate is:"+ yourDate);
 								String selectedShuttle[];
 								if (which != timesAdapter
 										.getCount() - 1) {
@@ -554,7 +553,7 @@ public class MainMenu extends Activity {
 									Calendar cal = Calendar.getInstance(Locale.US);
 									String trainTime = Event.convertTo24HoursFormat(timesAdapter.getItem(which).replace(" ", ""));
 									String[] pTrainTime = trainTime.split(":");
-									Log.i(tag, "trainTime: "+trainTime);
+									//Log.i(tag, "trainTime: "+trainTime);
 									cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(pTrainTime[0]));
 									cal.set(Calendar.MINUTE, Integer.parseInt(pTrainTime[1]));
 									long time = cal.getTimeInMillis();
@@ -625,12 +624,12 @@ public class MainMenu extends Activity {
 				break;
 			}
 
-			// Log.d(LOG_TAG, result);
+			// //Log.d(LOG_TAG, result);
 		}
 
 		private void processHTML(String html) {
 
-			// Log.i(MainMenu.tag,"type is " + type);
+			// //Log.i(MainMenu.tag,"type is " + type);
 			switch ((type)) {
 
 			case SHARPLES:
@@ -646,7 +645,7 @@ public class MainMenu extends Activity {
 						if ("DIV".equals(name)) {
 							try {
 								Class = tag.getAttribute("CLASS");
-								// Log.i(MainMenu.tag,Class);
+								// //Log.i(MainMenu.tag,Class);
 							} catch (NullPointerException e) {
 							}
 							if (Class != null) {
@@ -654,19 +653,19 @@ public class MainMenu extends Activity {
 									NodeList nl = tag.getChildren();
 									String tags = nl.asString();
 									for (Node node : nl.toNodeArray()) {
-										Log.i(MainMenu.tag, "Node: "+node.toPlainTextString().trim());
+										//Log.i(MainMenu.tag, "Node: "+node.toPlainTextString().trim());
 									}
-									Log.i(MainMenu.tag, "-----------------------------------------------------------------");
-									//Log.i(MainMenu.tag, "nl.size: " + nl.size());
-									//Log.i(MainMenu.tag, "Tags: " + tags);
+									//Log.i(MainMenu.tag, "-----------------------------------------------------------------");
+									////Log.i(MainMenu.tag, "nl.size: " + nl.size());
+									////Log.i(MainMenu.tag, "Tags: " + tags);
 								}*/
 
 								if (Class.equals("dining-menu")) {
-									// Log.i(MainMenu.tag,"count is: " + count);
+									// //Log.i(MainMenu.tag,"count is: " + count);
 									SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
 									Date d = new Date();
 									String day = sdf.format(d).trim();
-									Log.i(MainMenu.tag, day);
+									//Log.i(MainMenu.tag, day);
 									if (count == 0) {
 										if (!day.contains("Sunday")) {
 											breakfast = "BREAKFAST:" + "\n" + tag.toPlainTextString();
@@ -699,11 +698,11 @@ public class MainMenu extends Activity {
 
 					}
 				};
-				// Log.i(MainMenu.tag,"trying to make parser");
+				// //Log.i(MainMenu.tag,"trying to make parser");
 				Parser parser = new Parser(new Lexer(html));
-				// Log.i(MainMenu.tag,"made parser");
+				// //Log.i(MainMenu.tag,"made parser");
 				try {
-					// Log.i(MainMenu.tag,"tTTTT");
+					// //Log.i(MainMenu.tag,"tTTTT");
 					parser.visitAllNodesWith(visitor);
 				} catch (ParserException e) {
 					e.printStackTrace();
@@ -762,13 +761,13 @@ public class MainMenu extends Activity {
 
 					public void visitTag(Tag tag) {
 
-						// Log.i(MainMenu.tag,"trying to parse");
+						// //Log.i(MainMenu.tag,"trying to parse");
 						String name = tag.getTagName();
 						if (tag.toPlainTextString().equals("Hours")) {
-							// Log.i(MainMenu.tag,"in here");
+							// //Log.i(MainMenu.tag,"in here");
 							begin = true;
 						}
-						// Log.i(LOG_TAG, "Current Tag: " + name);
+						// //Log.i(LOG_TAG, "Current Tag: " + name);
 
 						if (begin) {
 							if (name.equals("LI") && count < 16) {
@@ -777,7 +776,7 @@ public class MainMenu extends Activity {
 										.replaceAll("more", "")
 										.replaceAll("\\s+", " "));
 								/*
-								 * Log.i(MainMenu.tag,"htag is: " +
+								 * //Log.i(MainMenu.tag,"htag is: " +
 								 * tag.toPlainTextString());
 								 */
 								count++;
@@ -787,19 +786,19 @@ public class MainMenu extends Activity {
 							}
 						}
 					}
-					// Log.i(MainMenu.tag,name);
+					// //Log.i(MainMenu.tag,name);
 					// Get date
 
 				};
-				// Log.i(MainMenu.tag,"trying to make parser");
+				// //Log.i(MainMenu.tag,"trying to make parser");
 				Parser parser3 = new Parser(new Lexer(html));
-				// Log.i(MainMenu.tag,"made parser");
+				// //Log.i(MainMenu.tag,"made parser");
 				try {
-					// Log.i(MainMenu.tag,"tTTTT");
+					// //Log.i(MainMenu.tag,"tTTTT");
 					parser3.visitAllNodesWith(visitor3);
 				} catch (ParserException e) {
 					e.printStackTrace();
-					// Log.i(MainMenu.tag,"RERSERSE");
+					// //Log.i(MainMenu.tag,"RERSERSE");
 				}
 				break;
 			}

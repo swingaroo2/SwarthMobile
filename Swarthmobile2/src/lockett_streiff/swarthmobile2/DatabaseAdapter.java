@@ -1,6 +1,5 @@
 package lockett_streiff.swarthmobile2;
 
-import java.util.Calendar;
 import java.util.UUID;
 
 import android.content.ContentValues;
@@ -9,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 // This class is used for interacting with database
 public class DatabaseAdapter {
@@ -155,15 +153,12 @@ public class DatabaseAdapter {
 	
 	// Return all groups currently in database
 	public Cursor getAllGroups(){
-		return sqLiteDatabase.query(GROUP_TABLE_NAME,
-				new String[] {GROUP_TABLE_COLUMN_ID, GROUP_TABLE_COULMN_TITLE}, null, null, null, null, null);
+		return null;//sqLiteDatabase.query(GROUP_TABLE_NAME,new String[] {GROUP_TABLE_COLUMN_ID, GROUP_TABLE_COULMN_TITLE}, null, null, null, null, null);
 	}
 	
 	// Find the group by its id
 	public Cursor getGroupById(String groupId){
-		return sqLiteDatabase.query(GROUP_TABLE_NAME,
-				new String[] {GROUP_TABLE_COLUMN_ID, GROUP_TABLE_COULMN_TITLE},
-				GROUP_TABLE_COLUMN_ID + " = '" + groupId + "'", null, null, null, null);
+		return null;//sqLiteDatabase.query(GROUP_TABLE_NAME,new String[] {GROUP_TABLE_COLUMN_ID, GROUP_TABLE_COULMN_TITLE},GROUP_TABLE_COLUMN_ID + " = '" + groupId + "'", null, null, null, null);
 	}
 	
 	// Insert a new group into Group table

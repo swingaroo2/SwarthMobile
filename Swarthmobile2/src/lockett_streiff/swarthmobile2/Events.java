@@ -269,7 +269,7 @@ public class Events extends Activity {
 	 * onClick event listener for buttons
 	 */
 	public void showEvents(View v) {
-		Log.i(tag, "showEvents");
+		//Log.i(tag, "showEvents");
 	}
 
 	/*
@@ -416,7 +416,7 @@ public class Events extends Activity {
 			// TODO Auto-generated method stub
 
 			/* Search for title tags */
-			// Log.i(tag, "TAG: "+localName);
+			// //Log.i(tag, "TAG: "+localName);
 			if (localName.equalsIgnoreCase("title")) {
 				state = stateTitle;
 				strElement = "";
@@ -455,15 +455,15 @@ public class Events extends Activity {
 			} else if (localName.equalsIgnoreCase("link") && strElement.contains("EventList")) {
 				strLink += strElement + "\n";
 				link = strElement;
-				//Log.i(tag, "Link: "+link);
+				////Log.i(tag, "Link: "+link);
 			} else if (localName.equalsIgnoreCase("category")) {
 				/* The last tag in an event */
-				//Log.i(tag, "strElement: "+strElement);
+				////Log.i(tag, "strElement: "+strElement);
 				strCategory += strElement + "\n";
-				// Log.i(tag, "TITLE: " + title);
+				// //Log.i(tag, "TITLE: " + title);
 				/*
-				 * Log.i(tag, "DATE: " + strElement); Log.i(tag, "TIME: " +
-				 * time); Log.i(tag, "LOCATION: " + location); Log.i(tag,
+				 * //Log.i(tag, "DATE: " + strElement); //Log.i(tag, "TIME: " +
+				 * time); //Log.i(tag, "LOCATION: " + location); //Log.i(tag,
 				 * "-------------------------------");
 				 */
 				final Event event = new Event(title, time, strElement, location, link);
@@ -479,10 +479,10 @@ public class Events extends Activity {
 						}
 
 						/*
-						 * Log.i(tag, " Title: " + event.getTitle()); Log.i(tag,
-						 * " Time: " + event.getTime()); Log.i(tag, " Date: " +
-						 * event.getDate()); Log.i(tag, " Location: " +
-						 * event.getLocation()); Log.i(tag,
+						 * //Log.i(tag, " Title: " + event.getTitle()); //Log.i(tag,
+						 * " Time: " + event.getTime()); //Log.i(tag, " Date: " +
+						 * event.getDate()); //Log.i(tag, " Location: " +
+						 * event.getLocation()); //Log.i(tag,
 						 * "-------------------------------");
 						 */
 						Events.eventsList.add(event);
@@ -499,7 +499,7 @@ public class Events extends Activity {
 				String[] encodedArrLoc = Arrays.copyOfRange(encodedArr, 1,
 						encodedArr.length);
 				String text = Arrays.toString(encodedArr);
-				// Log.i(tag, "ENCODED: " + text);
+				// //Log.i(tag, "ENCODED: " + text);
 				time = getTime(text);
 				location = getLocation(encodedArrLoc);
 
@@ -521,14 +521,14 @@ public class Events extends Activity {
 				strElement += strCharacters;
 				streamTitle += strElement + "\n";
 			} else if (state == stateEncoded) {
-				// Log.i(tag, "strCharacters: "+strCharacters);
+				// //Log.i(tag, "strCharacters: "+strCharacters);
 				if (encodedStart) {
 					strEncoded += strCharacters;
-					// Log.i(tag, "strEncoded - start: "+strEncoded);
+					// //Log.i(tag, "strEncoded - start: "+strEncoded);
 				}
-				// Log.i(tag, "encodedEnd: "+encodedEnd);
+				// //Log.i(tag, "encodedEnd: "+encodedEnd);
 				if (encodedEnd) {
-					// Log.i(tag, "strEncoded - end: " + strEncoded);
+					// //Log.i(tag, "strEncoded - end: " + strEncoded);
 					encodedEnd = false;
 				}
 			}
@@ -548,19 +548,19 @@ public class Events extends Activity {
 			String[] parsed = modified.split("<td>");
 			parsed = Arrays.copyOfRange(parsed, 1, parsed.length);
 			List<String> parsedAL = new ArrayList<String>(Arrays.asList(parsed));
-			// Log.i(tag, "parsed: " + parsedAL.toString());
+			// //Log.i(tag, "parsed: " + parsedAL.toString());
 
 			/* Case 1: One or two times are specified */
 			if (parsedAL.contains("Start Time:")) {
 				int index = parsedAL.indexOf("Start Time:") + 2;
 				startTime = parsedAL.get(index).trim();
-				// Log.i(tag,
+				// //Log.i(tag,
 				// "index - start: "+index+" parsedAL[index]: "+startTime);
 			}
 			if (parsedAL.contains("End Time:")) {
 				int index = parsedAL.indexOf("End Time:") + 2;
 				endTime = parsedAL.get(index).trim();
-				// Log.i(tag,
+				// //Log.i(tag,
 				// "index - end: "+index+" parsedAL[index]: "+endTime);
 			}
 
@@ -568,7 +568,7 @@ public class Events extends Activity {
 			if (parsedAL.contains("All Day")) {
 				startTime = "All Day";
 				endTime = "All Day";
-				Log.i(tag, "All Day");
+				//Log.i(tag, "All Day");
 			}
 
 			/* More unspecified time handling */
@@ -587,9 +587,9 @@ public class Events extends Activity {
 			}
 			
 			
-			/*Log.i(tag, "Start Time: "+startTime);
-			Log.i(tag, "End Time: "+endTime);
-			Log.i(tag, "----------------------------------------");*/
+			/*//Log.i(tag, "Start Time: "+startTime);
+			//Log.i(tag, "End Time: "+endTime);
+			//Log.i(tag, "----------------------------------------");*/
 			time = startTime + " - " + endTime;
 			return time;
 		}
@@ -629,7 +629,7 @@ public class Events extends Activity {
 					} else if (myRoom.length() > 0) {
 						myRoom2 += "; " + myRoom.replace(": ", "");
 					}
-					// Log.i(tag, "myRoom2: "+myRoom2);
+					// //Log.i(tag, "myRoom2: "+myRoom2);
 				}
 			}
 
@@ -735,6 +735,7 @@ public class Events extends Activity {
 				String myDate = getDateAsString(year, month, day);
 				clicked = (Button) layout.findViewById(R.id.from_date_picker);
 				clicked.setText(myDate);
+				//view.updateDate(year, month, day);
 			}
 
 		}
@@ -773,21 +774,19 @@ public class Events extends Activity {
 
 			int[] pDate2 = getDateAsInts(date2);
 
-			Log.i("Events", "Current date: " + currMonth + "/" + currDay + "/"
-					+ currYear);
-			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"
-					+ selYear);
-			Log.i("Events", "End date: " + pDate2[0] + "/" + pDate2[1] + "/"
-					+ pDate2[2]);
-			Log.i("Events", "---------------------------------");
+			//Log.i("Events", "Current date: " + currMonth + "/" + currDay + "/"+ currYear);
+			//Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"+ selYear);
+			//Log.i("Events", "End date: " + pDate2[0] + "/" + pDate2[1] + "/"+ pDate2[2]);
+			//Log.i("Events", "---------------------------------");
 
+			
+			
 			/* Check: date1 is not before today's date */
-			if (selMonth < currMonth
-					|| (selDay < currDay && selMonth < currMonth)
-					|| selYear < currYear) {
-				Toast.makeText(getActivity(),
-						"Start date cannot predate the current day",
-						Toast.LENGTH_SHORT).show();
+			if (selYear < currYear) {
+				Toast.makeText(getActivity(), "Start date cannot predate the current day", Toast.LENGTH_SHORT).show();
+				return false;
+			} else if (selYear == currYear && (selMonth < currMonth || selDay < currDay)) {
+				Toast.makeText(getActivity(), "Start date cannot predate the current day", Toast.LENGTH_SHORT).show();
 				return false;
 			}
 
@@ -795,9 +794,7 @@ public class Events extends Activity {
 			if (selMonth > pDate2[0]
 					|| ((selMonth >= pDate2[0]) && (selDay > pDate2[1]))
 					|| selYear > pDate2[2]) {
-				Toast.makeText(getActivity(),
-						"Start date cannot occur after end date",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Start date cannot occur after end date", Toast.LENGTH_SHORT).show();
 				return false;
 			}
 
@@ -818,10 +815,11 @@ public class Events extends Activity {
 			c.setTime(new Date());
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH);
+			c.add(Calendar.DAY_OF_MONTH, 6);
 			int day = c.get(Calendar.DAY_OF_MONTH);
 
 			/* Create a new instance of DatePickerDialog and return it */
-			Log.i(tag, "month: " + month);
+			//Log.i(tag, "month: " + month);
 			return new DatePickerDialog(getActivity(), this, year, month, day);
 		}
 
@@ -831,6 +829,7 @@ public class Events extends Activity {
 				String myDate = getDateAsString(year, month, day);
 				clicked = (Button) layout.findViewById(R.id.to_date_picker);
 				clicked.setText(myDate);
+				//view.updateDate(year, month, day);
 			}
 		}
 
@@ -870,26 +869,26 @@ public class Events extends Activity {
 
 			int[] pDate1 = getDateAsInts(date1);
 
-			// Log.i("Event",
+			// //Log.i("Event",
 			// "Current date: "+currMonth+"/"+currDay+"/"+currYear);
-			Log.i("Events", "Start date: " + pDate1[0] + "/" + pDate1[1] + "/"
-					+ pDate1[2]);
-			Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"
-					+ selYear);
-			Log.i("Events", "---------------------------------");
+			//Log.i("Events", "Start date: " + pDate1[0] + "/" + pDate1[1] + "/"+ pDate1[2]);
+			//Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"+ selYear);
+			//Log.i("Events", "---------------------------------");
 
+			/* NOTE: pDate is indexed [MONTH, DAY, YEAR]*/
+			//Log.i("Events", "selYear < pDate1[2]: "+(selYear<pDate1[2]));
+			//Log.i("Events", "selMonth < pDate1[0]: "+(selMonth<pDate1[0]));
+			//Log.i("Events", "selDay < pDate1[1]: "+(selDay<pDate1[1]));
+			
 			/* Check: date2 is not before date1 */
-			if (selMonth < pDate1[0]
-					|| ((selMonth <= pDate1[0]) && (selDay < pDate1[1]))
-					|| selYear < pDate1[2]) {
-				Toast.makeText(getActivity(),
-						"End date cannot occur before start date",
-						Toast.LENGTH_SHORT).show();
+			if (selYear < pDate1[2]) {
+				Toast.makeText(getActivity(), "End date cannot occur before start date", Toast.LENGTH_SHORT).show();
+				return false;
+			} else if (selYear == pDate1[2] && (selMonth < pDate1[0] || selDay < pDate1[1])) {
+				Toast.makeText(getActivity(), "End date cannot occur before start date", Toast.LENGTH_SHORT).show();
 				return false;
 			}
-
 			return true;
-
 		}
 	}
 

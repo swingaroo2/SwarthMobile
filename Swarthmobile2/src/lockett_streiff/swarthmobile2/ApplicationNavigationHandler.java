@@ -15,10 +15,10 @@ import android.os.Bundle;
 public class ApplicationNavigationHandler {
 	
 	// Go to ViewAllGroupsActivity
-	public static void showAllGroups(Activity sourceActivity){
+	/*public static void showAllGroups(Activity sourceActivity){
 		Intent showAllGroupsIntent = new Intent(sourceActivity, ViewAllGroupsActivity.class);
 		sourceActivity.startActivity(showAllGroupsIntent);
-	}
+	}*/
 	
 	// Go to ViewTaskDetailActivity
 	public static void viewTaskDetail(Activity sourceActivity, Task task){
@@ -46,13 +46,13 @@ public class ApplicationNavigationHandler {
 	}
 	
 	// Go to ModifyGroupActivity to add a new group
-	public static void addNewGroup(Activity sourceActivity, int resultCode){
+	/*public static void addNewGroup(Activity sourceActivity, int resultCode){
 		Intent addNewGroupIntent = new Intent(sourceActivity, ModifyGroupActivity.class);
 		sourceActivity.startActivityForResult(addNewGroupIntent, resultCode);
-	}
+	}*/
 	
 	// Go to ModifyGroupActivity to edit an existing group
-	public static void editExistingGroup(Activity sourceActivity, Group existingGroup){
+	/*public static void editExistingGroup(Activity sourceActivity, Group existingGroup){
 		Intent editExistingGroupIntent = new Intent(sourceActivity, ModifyGroupActivity.class);
 		// put the group to edit into bundle
 		Bundle editExistingGroupBundle = new Bundle();
@@ -61,7 +61,7 @@ public class ApplicationNavigationHandler {
 		editExistingGroupIntent.putExtras(editExistingGroupBundle);
 		// start the activity
 		sourceActivity.startActivity(editExistingGroupIntent);
-	}
+	}*/
 	
 	// Go to ModifyTaskActivity to edit and existing Task
 	public static void editExistingTask(Activity sourceActivity, Task existingTask){
@@ -79,15 +79,15 @@ public class ApplicationNavigationHandler {
 	// Go to ModifyTaskActivity to add new task
 	public static void addNewTask(Activity sourceActivity, DatabaseAdapter databaseAdapter){
 		// Get all groups from database
-		Cursor allGroupsCursor = databaseAdapter.getAllGroups();
+		//Cursor allGroupsCursor = databaseAdapter.getAllGroups();
 		// Check if there is no group, then ask user to add group first
-		if(allGroupsCursor.getCount() == 0){
+		/*if(allGroupsCursor.getCount() == 0){
 			// Ask user to add group first
 			MessageDialogHandler.showMessageDialog(sourceActivity, "No group added!\nPlease go back and add group first");
-		} else {
+		} else {*/
 			// Start the activity for user to add task
 			Intent addNewTaskIntent = new Intent(sourceActivity, ModifyTaskActivity.class);
 			sourceActivity.startActivityForResult(addNewTaskIntent, ViewAllTasksActivity.ADD_NEW_TASK_REQUEST_CODE);
-		}
+		//}
 	}
 }

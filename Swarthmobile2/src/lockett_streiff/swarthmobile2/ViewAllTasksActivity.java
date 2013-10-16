@@ -1,12 +1,7 @@
 package lockett_streiff.swarthmobile2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,7 +70,7 @@ public class ViewAllTasksActivity extends GeneralActivity {
 			String[] from = new String[]{DatabaseAdapter.TASK_TABLE_COLUMN_TITLE};
 			// XML-defined Views to which DB data is bound
 			int[] to = new int[]{R.id.activity_view_all_groups_listview_all_groups_layout_textview_group_title};
-			Log.i(tag , Arrays.toString(to));
+			//Log.i(tag , Arrays.toString(to));
 			// Init the adapter for list view
 			// TODO replace the deprecated SimpleCursorAdapter with an alternative one
 			//tdAdapter = new ToDoListAdapter(this, R.layout.todo_list_item, allTasksCursor, from, to);

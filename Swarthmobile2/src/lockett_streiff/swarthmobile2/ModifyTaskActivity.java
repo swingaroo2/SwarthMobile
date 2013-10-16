@@ -4,18 +4,14 @@ import java.util.Calendar;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
@@ -130,8 +126,22 @@ public class ModifyTaskActivity extends GeneralActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_modify_task);
-
+		
+		Display display = getWindowManager().getDefaultDisplay(); 
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
+		
+		/* Layout arbitration */
+		if (width <= 900) {
+			setContentView(R.layout.activity_modify_task);
+		} else {
+			setContentView(R.layout.activity_modify_task_tablet);
+		}
+		
+		
+		
 		// Retrieve the group spinner
 		allGroupsSpinner = null;//(Spinner) findViewById(R.id.activity_modify_task_Spinner_group);
 

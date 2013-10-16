@@ -26,9 +26,9 @@ public class CalendarClient {
 	public CalendarClient(Activity context) {
 		this.context = context;
 		this.calendars = getCalendars();
-		Log.i(tag, "Calendars: " + calendars);
+		//Log.i(tag, "Calendars: " + calendars);
 		// newCalendar("Swarthmobile","zachls17@gmail.com");
-		Log.i(tag, "Calendar ID: " + getCalendarId("Swarthmore Campus Events"));
+		//Log.i(tag, "Calendar ID: " + getCalendarId("Swarthmore Campus Events"));
 	}
 
 	private ArrayList<String> getCalendars() {
@@ -87,11 +87,11 @@ public class CalendarClient {
 
 	public void newEvent(Event event, String title, String location, long start, long end, String myCal, String email) {
 
-		Log.i(tag, "calendars: " + this.calendars.toString());
+		//Log.i(tag, "calendars: " + this.calendars.toString());
 		if (!calendars.contains(myCal)) {
 			newCalendar(myCal, email);
 		}
-		Log.i(tag, "email: "+email);
+		//Log.i(tag, "email: "+email);
 		long calId = getCalendarId(myCal);
 		if (calId == -1) {
 			// no calendar account; react meaningfully
@@ -100,7 +100,7 @@ public class CalendarClient {
 
 		//Check if event is all day 
 		int allDay = (event.getTime().contains("All Day"))? 1 : 0;
-		Log.i(tag, "allDay: "+allDay);
+		//Log.i(tag, "allDay: "+allDay);
 
 		ContentValues values = new ContentValues();
 		/* Under the hood stuff */ 

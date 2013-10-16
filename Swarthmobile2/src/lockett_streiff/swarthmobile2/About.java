@@ -34,12 +34,12 @@ public class About extends Activity {
 				" and the need for an Android counterpart to the iPhone's iSwat app? SwarthMobile!\n\n" +
 				"We made a beta version of SwarthMobile as our final project and continued our work beyond the classroom " +
 				"in order to produce what you're currently using. We wanted to give Android users (for starters) the ability " +
-				"to access key content on the Dash and the Swarthmore webpage on-the-go.\n\nThere's more we can add to make " +
+				"to access key content on the Dash and the Swarthmore webpage on the go.\n\nThere's more we can add to make " +
 				"this app even better, but in any event, please consider this our gift to the current and future students of " +
 				"Swarthmore College\n\n\t\t-- Zach and Sid";
 		
 		aboutZach = "Zach Lockett Streiff, '14, is a Computer Science major/Statistics minor. He is also a cellist, " +
-				"swing dancer, expert pun slinger, and wannabe bargain hunter.";
+				"swing dancer, pun enthusiast, and wannabe bargain hunter.";
 		
 		aboutSid = "Sid Reddy, '15, is a cool guy, rugby player, and a great secondary contributer.";
 		
