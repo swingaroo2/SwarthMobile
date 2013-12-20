@@ -39,7 +39,7 @@
                 <TextView
                     android:id="@+id/activity_view_task_detail_TextView_task_title_label"
                     android:layout_height="match_parent"
-                    android:background="@color/dark_blue"
+                    android:background="@color/black"
                     android:gravity="center"
                     android:paddingBottom="10dip"
                     android:paddingLeft="5dp"
@@ -64,7 +64,7 @@
                 <TextView
                     android:id="@+id/activity_view_task_detail_TextView_due_date_label"
                     android:layout_height="match_parent"
-                    android:background="@color/dark_blue"
+                    android:background="@color/black"
                     android:gravity="center"
                     android:paddingBottom="10dip"
                     android:paddingLeft="5dp"
@@ -89,7 +89,7 @@
                 <TextView
                     android:id="@+id/activity_view_task_detail_TextView_note_label"
                     android:layout_height="match_parent"
-                    android:background="@color/dark_blue"
+                    android:background="@color/black"
                     android:gravity="center"
                     android:paddingBottom="10dip"
                     android:paddingLeft="5dp"
@@ -114,7 +114,7 @@
                 <TextView
                     android:id="@+id/activity_view_task_detail_TextView_prority_level_label"
                     android:layout_height="match_parent"
-                    android:background="@color/dark_blue"
+                    android:background="@color/black"
                     android:gravity="center"
                     android:paddingBottom="10dip"
                     android:paddingLeft="5dp"
