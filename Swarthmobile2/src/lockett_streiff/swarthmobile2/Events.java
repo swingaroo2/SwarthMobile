@@ -58,7 +58,7 @@ public class Events extends Activity {
 
 	/* User emails acquisition */
 	static List<String> emails;
-	
+
 	/* Date range selection Dialog stuff */
 	static View layout;
 
@@ -90,12 +90,15 @@ public class Events extends Activity {
 		setContentView(R.layout.events);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		eventsList = new ArrayList<Event>();
 		eventsView = (ListView) this.findViewById(R.id.events_lv);
 		eventsAdapter = new EventAdapter(Events.this, eventsList);
-		
 		eventsView.setAdapter(eventsAdapter);
+
+		/* Default to today's campus events */
+		defaultEvents();
+		
 	}
 
 	@Override
@@ -105,7 +108,7 @@ public class Events extends Activity {
 		return true;
 	}
 
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		/* Handle item selection */
@@ -120,6 +123,24 @@ public class Events extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 		return false;
+	}
+
+	/*
+	 * Default to getting today's campus events 
+	 */
+	public void defaultEvents() {
+
+		/* Set up Calendar instance */
+		final Calendar c = Calendar.getInstance();
+
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH);
+		int day = c.get(Calendar.DAY_OF_MONTH);
+
+		String date1 = getDateAsString(year, month, day);
+		date1 = parseDateString(date1);
+		
+		getEvents(date1,date1);
 	}
 
 	/*
@@ -138,7 +159,6 @@ public class Events extends Activity {
 		int day = c.get(Calendar.DAY_OF_MONTH);
 
 		String date1 = getDateAsString(year, month, day);
-
 		/* Set Button text to default values */
 		b1.setText(date1);
 		b2.setText(date1);
@@ -186,10 +206,8 @@ public class Events extends Activity {
 	public void getEventsOnClick(View v) {
 
 		/* Get text from date-picker buttons */
-		String date1 = (String) ((Button) layout
-				.findViewById(R.id.from_date_picker)).getText();
-		String date2 = (String) ((Button) layout
-				.findViewById(R.id.to_date_picker)).getText();
+		String date1 = (String) ((Button) layout.findViewById(R.id.from_date_picker)).getText();
+		String date2 = (String) ((Button) layout.findViewById(R.id.to_date_picker)).getText();
 
 		/* Convert to mm/dd/yyyy format for passing into getEvents */
 		String pDate1 = parseDateString(date1);
@@ -306,10 +324,10 @@ public class Events extends Activity {
 		newFragment.show(getFragmentManager(), "dialog");
 	}
 
-	// ///////// Event retrieval backend ///////////
+	/////////// Event retrieval backend ///////////
 
 	/*
-	 * Retrieves HTML from calendar.swarthmore.edu
+	 * Retrieves XML from calendar.swarthmore.edu
 	 */
 	private void getEvents(String date1, String date2) {
 
@@ -318,7 +336,7 @@ public class Events extends Activity {
 			return;
 		}
 		String URL = "http://calendar.swarthmore.edu/calendar/RSSSyndicator.aspx?category=&location=&type=N&starting="
-					 + date1 + "&ending=" + date2 + "&binary=Y&keywords=&ics=Y";
+				+ date1 + "&ending=" + date2 + "&binary=Y&keywords=&ics=Y";
 
 		new RetreiveFeedTask().execute(URL);
 
@@ -578,15 +596,15 @@ public class Events extends Activity {
 			else if (startTime.contains("Midnight")) {
 				startTime = startTime.replace("*", "");
 			}
-			
+
 			if (endTime.equals("")) {
 				endTime = "11:59 PM*";
 			}
 			else if (endTime.contains("Midnight")) {
 				endTime = endTime.replace("*", "");
 			}
-			
-			
+
+
 			/*//Log.i(tag, "Start Time: "+startTime);
 			//Log.i(tag, "End Time: "+endTime);
 			//Log.i(tag, "----------------------------------------");*/
@@ -705,7 +723,7 @@ public class Events extends Activity {
 
 	/*
 	 * Since I have only two DatePickerFragments to manage, this brute-force
-	 * method works. Eventually, I'd like to optimize this to only use one
+	 * method works fine. Eventually, I'd like to optimize this to only use one
 	 * DatePickerFragment class.
 	 */
 	public static class FromDatePickerFragment extends DialogFragment implements
@@ -779,8 +797,8 @@ public class Events extends Activity {
 			//Log.i("Events", "End date: " + pDate2[0] + "/" + pDate2[1] + "/"+ pDate2[2]);
 			//Log.i("Events", "---------------------------------");
 
-			
-			
+
+
 			/* Check: date1 is not before today's date */
 			if (selYear < currYear) {
 				Toast.makeText(getActivity(), "Start date cannot predate the current day", Toast.LENGTH_SHORT).show();
@@ -879,7 +897,7 @@ public class Events extends Activity {
 			//Log.i("Events", "selYear < pDate1[2]: "+(selYear<pDate1[2]));
 			//Log.i("Events", "selMonth < pDate1[0]: "+(selMonth<pDate1[0]));
 			//Log.i("Events", "selDay < pDate1[1]: "+(selDay<pDate1[1]));
-			
+
 			/* Check: date2 is not before date1 */
 			if (selYear < pDate1[2]) {
 				Toast.makeText(getActivity(), "End date cannot occur before start date", Toast.LENGTH_SHORT).show();
