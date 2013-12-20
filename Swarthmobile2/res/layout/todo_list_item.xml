@@ -19,7 +19,7 @@
         android:layout_weight=".10"
         android:layout_gravity="right"
         android:background="@android:color/transparent"
-        android:src="@drawable/btn_close_normal"
+        android:src="@drawable/dialog_ic_close_normal_holo_light"
         android:onClick="deleteListItem"
         />
 

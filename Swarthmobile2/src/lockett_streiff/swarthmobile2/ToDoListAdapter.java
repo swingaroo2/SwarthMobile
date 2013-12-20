@@ -57,6 +57,7 @@ public class ToDoListAdapter extends SimpleCursorAdapter {
 
 	@Override
 	public void bindView(View v, Context context, Cursor c) {
+		super.bindView(v, context, c);
 		ViewHolder vh = new ViewHolder();
 		
 		int nameCol = this.mTitleIndex;

@@ -14,10 +14,10 @@ public class ViewAllTasksActivity extends GeneralActivity {
 
 	// The List View that shows all Tasks
 	private ListView allTasksListView;
-	
-	// ToDoListAdapter for custom ListView
-	private ToDoListAdapter tdAdapter;
 
+	// Custom SimpleCursorAdapter
+	private ToDoListAdapter tdAdapter;
+	
 	// DatabaseAdapter for interacting with database
 	private DatabaseAdapter databaseAdapter;
 
@@ -71,10 +71,10 @@ public class ViewAllTasksActivity extends GeneralActivity {
 			// XML-defined Views to which DB data is bound
 			int[] to = new int[]{R.id.activity_view_all_groups_listview_all_groups_layout_textview_group_title};
 			//Log.i(tag , Arrays.toString(to));
-			// Init the adapter for list view
-			// TODO replace the deprecated SimpleCursorAdapter with an alternative one
+			
 			//tdAdapter = new ToDoListAdapter(this, R.layout.todo_list_item, allTasksCursor, from, to);
 			allTasksListViewAdapter = new SimpleCursorAdapter(this,R.layout.activity_view_all_groups_listview_all_groups_layout, allTasksCursor, from, to);
+			
 			// Set the adapter for the list view
 			this.allTasksListView.setAdapter(allTasksListViewAdapter);
 			//this.allTasksListView.setAdapter(tdAdapter);
