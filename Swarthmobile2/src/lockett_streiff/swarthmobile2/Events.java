@@ -780,38 +780,42 @@ public class Events extends Activity {
 		}
 
 		/* Compare dates for both Buttons */
-		private boolean validate(int selYear, int selMonth, int selDay) {
+		private boolean validate(int sYear, int sMonth, int sDay) {
 			Calendar c = Calendar.getInstance();
 
-			String date2 = (String) ((Button) layout
-					.findViewById(R.id.to_date_picker)).getText();
+			String eDate = (String) ((Button) layout.findViewById(R.id.to_date_picker)).getText();
 
 			int currYear = c.get(Calendar.YEAR);
 			int currMonth = c.get(Calendar.MONTH) + 1;
 			int currDay = c.get(Calendar.DAY_OF_MONTH);
 
-			int[] pDate2 = getDateAsInts(date2);
+			int[] eDateArr = getDateAsInts(eDate);
+			int eMonth = eDateArr[0];
+			int eDay = eDateArr[1];
+			int eYear = eDateArr[2];
+			
+			Log.i("Events", "Current date: " + currMonth + "/" + currDay + "/"+ currYear);
+			Log.i("Events", "Selected date: " + sMonth + "/" + sDay + "/"+ sYear);
+			Log.i("Events", "End date: " + eMonth + "/" + eDay + "/"+ eYear);
+			Log.i("Events", "---------------------------------");
 
-			//Log.i("Events", "Current date: " + currMonth + "/" + currDay + "/"+ currYear);
-			//Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"+ selYear);
-			//Log.i("Events", "End date: " + pDate2[0] + "/" + pDate2[1] + "/"+ pDate2[2]);
-			//Log.i("Events", "---------------------------------");
-
-
-
-			/* Check: date1 is not before today's date */
-			if (selYear < currYear) {
+			/* Check: sDate is not before today's date */
+			if (sYear < currYear) {
 				Toast.makeText(getActivity(), "Start date cannot predate the current day", Toast.LENGTH_SHORT).show();
 				return false;
-			} else if (selYear == currYear && (selMonth < currMonth || selDay < currDay)) {
+			} else if (sYear == currYear && (sMonth < currMonth || sDay < currDay)) {
 				Toast.makeText(getActivity(), "Start date cannot predate the current day", Toast.LENGTH_SHORT).show();
 				return false;
 			}
 
-			/* Check: date1 is not after date2 */
-			if (selMonth > pDate2[0]
-					|| ((selMonth >= pDate2[0]) && (selDay > pDate2[1]))
-					|| selYear > pDate2[2]) {
+			/* Check: sDate is not after eDate */
+			if (sYear > eYear) {
+				Toast.makeText(getActivity(), "Start date cannot occur after end date", Toast.LENGTH_SHORT).show();
+				return false;
+			} else if ( (sYear == eYear) && (sMonth > eMonth) ) {
+				Toast.makeText(getActivity(), "Start date cannot occur after end date", Toast.LENGTH_SHORT).show();
+				return false;
+			} else if ( (sMonth == eMonth) && (sDay > eDay) ) {
 				Toast.makeText(getActivity(), "Start date cannot occur after end date", Toast.LENGTH_SHORT).show();
 				return false;
 			}
@@ -873,36 +877,27 @@ public class Events extends Activity {
 		}
 
 		/* Compare dates for both Buttons */
-		private boolean validate(int selYear, int selMonth, int selDay) {
-			Calendar c = Calendar.getInstance();
+		private boolean validate(int eYear, int eMonth, int eDay) {
 
-			String date1 = (String) ((Button) layout
-					.findViewById(R.id.from_date_picker)).getText();
+			String sDate = (String) ((Button) layout.findViewById(R.id.from_date_picker)).getText();
 
-			/*
-			 * int currYear = c.get(Calendar.YEAR); int currMonth =
-			 * c.get(Calendar.MONTH); int currDay =
-			 * c.get(Calendar.DAY_OF_MONTH);
-			 */
+			int[] sDateArr = getDateAsInts(sDate);
+			int sMonth = sDateArr[0];
+			int sDay = sDateArr[1];
+			int sYear = sDateArr[2];
+			
+			Log.i("Events", "[End] Start date: " + sMonth + "/" + sDay + "/"+ sYear);
+			Log.i("Events", "[End] End date: " + eMonth + "/" + eDay + "/"+ eYear);
+			Log.i("Events", "---------------------------------");
 
-			int[] pDate1 = getDateAsInts(date1);
-
-			// //Log.i("Event",
-			// "Current date: "+currMonth+"/"+currDay+"/"+currYear);
-			//Log.i("Events", "Start date: " + pDate1[0] + "/" + pDate1[1] + "/"+ pDate1[2]);
-			//Log.i("Events", "Selected date: " + selMonth + "/" + selDay + "/"+ selYear);
-			//Log.i("Events", "---------------------------------");
-
-			/* NOTE: pDate is indexed [MONTH, DAY, YEAR]*/
-			//Log.i("Events", "selYear < pDate1[2]: "+(selYear<pDate1[2]));
-			//Log.i("Events", "selMonth < pDate1[0]: "+(selMonth<pDate1[0]));
-			//Log.i("Events", "selDay < pDate1[1]: "+(selDay<pDate1[1]));
-
-			/* Check: date2 is not before date1 */
-			if (selYear < pDate1[2]) {
+			/* Check: eDate is not before sDate */
+			if (eYear < sYear) {
 				Toast.makeText(getActivity(), "End date cannot occur before start date", Toast.LENGTH_SHORT).show();
 				return false;
-			} else if (selYear == pDate1[2] && (selMonth < pDate1[0] || selDay < pDate1[1])) {
+			} else if ( (eYear == sYear) && (eMonth < sMonth) ) {
+				Toast.makeText(getActivity(), "End date cannot occur before start date", Toast.LENGTH_SHORT).show();
+				return false;
+			} else if ( (eMonth == sMonth) && (eDay < sDay) ) {
 				Toast.makeText(getActivity(), "End date cannot occur before start date", Toast.LENGTH_SHORT).show();
 				return false;
 			}
